@@ -28,7 +28,7 @@ const simpleTopology = (object) => {
 };
 const testTopo = {
   type: "Topology",
-  transform: { scale: [10, 10], translate: [0, 0] },
+  transform: { scale: [10, 10], translate: [10, 10] },
   objects: {
     foo: {
       type: "GeometryCollection",
