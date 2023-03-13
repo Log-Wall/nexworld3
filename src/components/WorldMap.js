@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { geoEqualEarth, geoPath } from "d3-geo";
+import { geoCircle, geoEqualEarth, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import * as t from "topojson-client";
 
@@ -38,13 +38,18 @@ const testTopo = {
         { type: "Polygon", arcs: [[2]] },
       ],
     },
+    markers: {
+      type: "GeometryCollection",
+      geometries: [
+        { type: "Point", coordinates: [[5, 5, 2]] }
+      ]
+    }
   },
   arcs: [
     [
       [0, 0],
       [2, 0],
-      [0, -1],
-      [0, -10],
+      [0, 100],
     ],
     [
       [50, 0],
@@ -55,6 +60,29 @@ const testTopo = {
     ],
   ],
 };
+const gridTopo = {
+  type: "Topology",
+  transform: { scale: [10, 10], translate: [0, 0] },
+  objects: {
+    grid: {
+      type: "GeometryCollection",
+      geometries: [
+        { type: "LineString", arcs: [[0]] },
+        { type: "LineString", arcs: [[1]] },]
+    }
+  },
+  arcs: [
+    [
+      [0, 10],
+      [100, 0],
+    ],
+    [
+      [0, 200],
+      [100, 0],
+    ],
+  ],
+};
+
 const example = {
   type: "Topology",
   transform: {
@@ -172,8 +200,19 @@ testTopo.arcs.push([[30, 30], ...stringToArc(topoString)]);
 
 globalThis.test = simpleTopology({ type: "Polygon", arcs: [[1]] });
 globalThis.testO = feature(testTopo, testTopo.objects.foo);
+globalThis.testC = feature(testTopo, testTopo.objects.foo.geometries[0]);
 //globalThis.testO = feature(example, example.objects["two-squares"]);
 globalThis.geoGenerator = geoPath()(globalThis.testO);
+
+
+const generateGrid = () => {
+  const height = 10;
+  const width = 10;
+  const offsetHeight = height / 2;
+  const offsetWidth = width / 2;
+
+
+};
 const WorldMap = () => {
   return (
     <div>
@@ -189,9 +228,21 @@ const WorldMap = () => {
               strokeWidth={0.5}
             />
           ))*/}
-          <path d={geoGenerator} />
+          {testTopo.objects.foo.geometries.map((obj, i) => {
+            return (
+              <path key={i} d={geoPath()(feature(testTopo, obj))} />
+            );
+          })}
         </g>
       </svg>
+      {gridTopo.objects.grid.geometries.map((obj, i) => {
+        return (
+          <svg key={i} width={800} height={450} viewBox="0 0 800 450"><g>
+            <path d={geoPath()(feature(gridTopo, obj))} stroke={"red"}
+              strokeWidth={1} /></g>
+          </svg>
+        );
+      })}
       <canvas></canvas>
     </div>
   );
