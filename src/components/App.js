@@ -1,9 +1,11 @@
-import WorldMap from "./WorldMap";
+import WorldMapCanvas from "./WorldMapCanvas";
+import GridMap from "./GridMap";
 
 function App() {
   return (
     <div className="App">
-      <WorldMap />
+      <div>Map</div>
+      <WorldMapCanvas />
     </div>
   );
 }
