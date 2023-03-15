@@ -261,6 +261,17 @@ const stringToArc = (txt) => {
   });
   return arcArray;
 };
+const reverseCoords = (arr) => {
+  const res = [];
+  arr.forEach(e => {
+    e[0] = e[0] * -1;
+    e[1] = e[1] * -1;
+    res.push(e);
+  }
+  );
+  return res;
+
+};
 testTopo.arcs.push([[30, 30], ...stringToArc(topoString)]);
 
 globalThis.test = simpleTopology({ type: "Polygon", arcs: [[1]] });
