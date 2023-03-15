@@ -1,5 +1,5 @@
 import WorldMapCanvas from "./WorldMapCanvas";
-import GridMap from "./GridMap";
+//import GridMap from "./GridMap";
 
 function App() {
   return (

@@ -1,5 +1,4 @@
 import { useRef, useEffect } from "react";
-import select
 
 const GridMap = () => {
   const svgRef = useRef(null);
