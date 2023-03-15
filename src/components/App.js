@@ -1,9 +1,9 @@
 import WorldMapCanvas from "./WorldMapCanvas";
-//import GridMap from "./GridMap";
+import WorldMap from "./WorldMapTests";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ background: "blue" }}>
       <div>Map</div>
       <WorldMapCanvas />
     </div>

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+/*import { useRef, useEffect } from "react";
 
 const GridMap = () => {
   const svgRef = useRef(null);
@@ -49,3 +49,4 @@ const GridMap = () => {
 };
 
 export default GridMap;
+*/

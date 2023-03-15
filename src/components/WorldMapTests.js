@@ -40,10 +40,8 @@ const testTopo = {
     },
     markers: {
       type: "GeometryCollection",
-      geometries: [
-        { type: "Point", coordinates: [[5, 5, 2]] }
-      ]
-    }
+      geometries: [{ type: "Point", coordinates: [[5, 5, 2]] }],
+    },
   },
   arcs: [
     [
@@ -68,8 +66,9 @@ const gridTopo = {
       type: "GeometryCollection",
       geometries: [
         { type: "LineString", arcs: [[0]] },
-        { type: "LineString", arcs: [[1]] },]
-    }
+        { type: "LineString", arcs: [[1]] },
+      ],
+    },
   },
   arcs: [
     [
@@ -154,6 +153,72 @@ const example = {
     ],
   ],
 };
+const topoj = {
+  type: "Topology",
+  transform: { scale: [0, 0], translate: [0, 0] }, // This will be overwritten later
+  arcs: [
+    [
+      [-0.5, -0.5],
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+    ],
+    [
+      [42.5, -5.5],
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+    ], // Sea Lion Cove
+  ],
+  objects: {
+    ports: {
+      type: "GeometryCollection",
+      geometries: [
+        {
+          type: "Polygon",
+          arcs: [[0]],
+          id: "SK",
+          properties: { name: "Shala-Khulia" },
+        },
+        {
+          type: "Polygon",
+          arcs: [[1]],
+          id: "SL",
+          properties: { name: "Sea Lion Cove" },
+        },
+      ],
+    },
+    marsh: {
+      type: "GeometryCollection",
+      geometries: [
+        // {type: 'Polygon',arcs:[[5,6,7]],id:'MP-SK'}, /* DON'T DELETE, Sample
+      ],
+    },
+    chops: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    grass: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    mount: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    reefs: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    roughs: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+  },
+};
+
 const geoTest = {
   type: "Feature",
   properties: {},
@@ -201,22 +266,20 @@ testTopo.arcs.push([[30, 30], ...stringToArc(topoString)]);
 globalThis.test = simpleTopology({ type: "Polygon", arcs: [[1]] });
 globalThis.testO = feature(testTopo, testTopo.objects.foo);
 globalThis.testC = feature(testTopo, testTopo.objects.foo.geometries[0]);
-//globalThis.testO = feature(example, example.objects["two-squares"]);
+globalThis.testO = feature(topoj, topoj.objects["ports"]);
 globalThis.geoGenerator = geoPath()(globalThis.testO);
-
 
 const generateGrid = () => {
   const height = 10;
   const width = 10;
   const offsetHeight = height / 2;
   const offsetWidth = width / 2;
-
-
 };
 const WorldMap = () => {
   return (
     <div>
       <svg width={800} height={450} viewBox="0 0 800 450">
+        <g>{geoGenerator}</g>
         <g className="countries">
           {/*geographies.map((d, i) => (
             <path
@@ -228,18 +291,21 @@ const WorldMap = () => {
               strokeWidth={0.5}
             />
           ))*/}
-          {testTopo.objects.foo.geometries.map((obj, i) => {
-            return (
-              <path key={i} d={geoPath()(feature(testTopo, obj))} />
-            );
+          {topoj.objects.ports.geometries.map((obj, i) => {
+            return <path key={i} d={geoPath()(feature(topoj, obj))} />;
           })}
         </g>
       </svg>
       {gridTopo.objects.grid.geometries.map((obj, i) => {
         return (
-          <svg key={i} width={800} height={450} viewBox="0 0 800 450"><g>
-            <path d={geoPath()(feature(gridTopo, obj))} stroke={"red"}
-              strokeWidth={1} /></g>
+          <svg key={i} width={800} height={450} viewBox="0 0 800 450">
+            <g>
+              <path
+                d={geoPath()(feature(gridTopo, obj))}
+                stroke={"red"}
+                strokeWidth={1}
+              />
+            </g>
           </svg>
         );
       })}
