@@ -51,6 +51,7 @@ const gridWidth = 20000;
 const gridHeight = 20000;
 
 const drawMap = ({ context, path, transform }) => {
+
   drawFeatures({
     context: context,
     path: path,
@@ -174,6 +175,8 @@ const drawMap = ({ context, path, transform }) => {
   });
 
   drawGrid({ context: context, transform: transform });
+  drawShip({ coords: nexWorld.location });
+  context.restore();
 };
 
 const drawGrid = ({ context, transform }) => {
@@ -212,8 +215,82 @@ const drawGrid = ({ context, transform }) => {
   }
 
   context.stroke();
+  context.closePath();
 };
 
+const drawShip = ({ coords, direction }) => {
+  nexWorld.context.closePath();
+  //context.save();
+  //context.translate(0, 0);
+  //context.rotate((45 * Math.PI) / 180);
+  //const { x, y } = coords;
+  const x = coords[0] * 10;
+  const y = coords[1] * 10;
+  /*
+    context.beginPath();
+    context.fillStyle = 'red';
+    context.strokeStyle = 'red';
+    context.lineWidth = 0.25;
+    context.moveTo(x, y);
+    context.lineTo(x, y - 100);
+    context.lineTo(x + 2, y - 98);
+    context.lineTo(x - 2, y - 98);
+    context.lineTo(x, y - 100);
+    context.fill();
+    context.stroke();
+    context.closePath();
+  */
+
+
+  nexWorld.context.fillStyle = 'rgb(139,69,19)';
+  nexWorld.context.lineWidth = 0.25;
+  nexWorld.context.strokeStyle = 'black';
+  nexWorld.context.beginPath();
+  nexWorld.context.moveTo(x, y);
+  nexWorld.context.lineTo(x, y - 5);
+  nexWorld.context.quadraticCurveTo(x + 2, y - 3, x + 2, y);
+  nexWorld.context.quadraticCurveTo(x + 2, y + 4, x + 0.5, y + 4);
+  nexWorld.context.lineTo(x - 0.5, y + 4);
+  nexWorld.context.quadraticCurveTo(x - 2, y + 4, x - 2, y);
+  nexWorld.context.quadraticCurveTo(x - 2, y - 3, x, y - 5);
+  nexWorld.context.fill();
+  nexWorld.context.stroke();
+  nexWorld.context.closePath();
+
+  nexWorld.context.fillStyle = 'white';
+  nexWorld.context.beginPath();
+  nexWorld.context.moveTo(x - 3, y - 2);
+  nexWorld.context.quadraticCurveTo(x, y - 3.5, x + 3, y - 2);
+  nexWorld.context.fill();
+  nexWorld.context.closePath();
+  nexWorld.context.beginPath();
+  nexWorld.context.moveTo(x, y + 1);
+  nexWorld.context.quadraticCurveTo(x + 2, y - 1, x + 4, y + 1);
+  nexWorld.context.lineTo(x - 4, y + 1);
+  nexWorld.context.quadraticCurveTo(x - 2, y - 1, x, y + 1);
+  nexWorld.context.fill();
+  nexWorld.context.closePath();
+
+  nexWorld.context.beginPath();
+  nexWorld.context.strokeStyle = 'black';
+  nexWorld.context.lineWidth = 0.25;
+  nexWorld.context.fillStyle = "	rgb(105,105,105)";
+  nexWorld.context.arc(x, y - 2, 0.5, 0, 360, false);
+  nexWorld.context.fill();
+  nexWorld.context.stroke();
+  nexWorld.context.closePath();
+  nexWorld.context.beginPath();
+  nexWorld.context.strokeStyle = 'black';
+  nexWorld.context.lineWidth = 0.25;
+  nexWorld.context.fillStyle = "	rgb(105,105,105)";
+  nexWorld.context.arc(x, y + 1, 0.5, 0, 360, false);
+  nexWorld.context.fill();
+  nexWorld.context.stroke();
+  nexWorld.context.closePath();
+
+  nexWorld.context.restore();
+
+};
 const drawFeatures = ({ context, path, type, rgba }) => {
   const feature = topojson.feature(topoj, topoj.objects[type]);
   context.fillStyle = rgba;
@@ -230,9 +307,11 @@ const drawFeatures = ({ context, path, type, rgba }) => {
 export const nexWorld = {
   drawMap: drawMap,
   drawGrid: drawGrid,
+  drawShip: drawShip,
   unitHeight: unitHeight,
   unitWidth: unitWidth,
   topoj: topoj,
+  location: [0, 0],
 };
 
 window.nexWorld = nexWorld;

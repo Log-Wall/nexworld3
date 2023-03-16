@@ -4,14 +4,6 @@ import { geoPath } from "d3-geo";
 import { zoom, zoomTransform } from "d3-zoom";
 import * as d3 from "d3";
 
-const ship = () => {
-  return (
-    <svg width="100" height="100">
-      <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
-    </svg>
-  );
-};
-
 const WorldMapCanvas = ({ nexWorld, setCoords }) => {
   const [location, setLocation] = useState([0, 0]);
   nexWorld.setLocation = setLocation;
@@ -21,6 +13,8 @@ const WorldMapCanvas = ({ nexWorld, setCoords }) => {
   useEffect(() => {
     const canvas = select(canvasRef.current);
     const context = canvasRef.current.getContext("2d"/*, { alpha: false }*/);
+    nexWorld.context = context;
+    //setContextState(context);
 
     //const width = canvas.node().parentElement.clientWidth;
     //const height = canvas.node().parentElement.clientHeight;
@@ -42,8 +36,10 @@ const WorldMapCanvas = ({ nexWorld, setCoords }) => {
         context.scale(event.transform.k, event.transform.k);
 
         nexWorld.drawMap({ context: context, zoom: z, path: path, transform: event.transform });
-
-        context.restore();
+        nexWorld.drawShip({
+          coords: nexWorld.location,
+        });
+        console.log(nexWorld.location);
       })
     );
 
@@ -66,15 +62,19 @@ const WorldMapCanvas = ({ nexWorld, setCoords }) => {
 
     nexWorld.drawMap({ context: context, zoom: z, path: path, transform: context.getTransform() });
 
+    nexWorld.drawShip({
+      coords: nexWorld.location,
+    });
+
     // Set initial starting coordinate view [0, 0]
     z.translateBy(select(canvasRef.current), canvasRef.current.width / 2 - (0 * nexWorld.unitWidth), canvasRef.current.height / 2 + (0 * nexWorld.unitHeight));
     // Set initial zoom scale
-    z.scaleTo(select(canvasRef.current), 0.15);
+    z.scaleTo(select(canvasRef.current), 1.5);
   }, []);
 
   useEffect(() => {
-    const canvas = select(canvasRef.current);
-    const context = canvasRef.current.getContext("2d"/*, { alpha: false }*/);
+    nexWorld.location = location;
+    console.log(location);
   }, [location]);
 
   return <canvas ref={canvasRef} style={{
