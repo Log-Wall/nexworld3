@@ -49,7 +49,15 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
+    swamp: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
     mount: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    lowmt: {
       type: "GeometryCollection",
       geometries: [],
     },
@@ -78,18 +86,24 @@ export const insert = (data, type) => {
 };
 
 export const checkClosed = (arr) => {
-  const res = arr.reduce((a, c) => { a[0] += c[0]; a[1] += c[1]; return a; }, [0, 0]);
+  const res = arr.reduce(
+    (a, c) => {
+      a[0] += c[0];
+      a[1] += c[1];
+      return a;
+    },
+    [0, 0]
+  );
   return res;
 };
 
 export const reverseCoords = (arr) => {
   const res = [];
-  arr.forEach(e => {
+  arr.forEach((e) => {
     e[0] = e[0] * -1;
     e[1] = e[1] * -1;
     res.unshift(e);
-  }
-  );
+  });
   return res;
 };
 
