@@ -1,10 +1,49 @@
 import * as topojson from "topojson-client";
-import { topoj } from "../base/topo";
-import "./topographies/shalaKhulia.js";
-import "./topographies/polyargos.js";
-import "./topographies/chopsWest.js";
-import "./topographies/roughsWest.js";
-import "./topographies/roughsPhereklos";
+import { topoj } from "./topo";
+
+import "./topographies/mainlandReefs/mainlandMiddleEast";
+import "./topographies/mainlandReefs/mainlandMiddleWest";
+import "./topographies/mainlandReefs/mainlandNorth";
+import "./topographies/mainlandReefs/mainlandSouth";
+
+import "./topographies/mainlandInternal/mainlandAshtan";
+import "./topographies/mainlandInternal/mainlandFissure";
+import "./topographies/mainlandInternal/mainlandGraniteHills";
+import "./topographies/mainlandInternal/mainlandHarae";
+import "./topographies/mainlandInternal/mainlandLowerGranite";
+import "./topographies/mainlandInternal/mainlandMhaldor";
+import "./topographies/mainlandInternal/mainlandMiddleEast";
+import "./topographies/mainlandInternal/mainlandNewHope";
+import "./topographies/mainlandInternal/mainlandNewHope2";
+import "./topographies/mainlandInternal/mainlandNorth";
+import "./topographies/mainlandInternal/mainlandNorthReach";
+import "./topographies/mainlandInternal/mainlandSouth";
+
+import "./topographies/islands/ageiro";
+import "./topographies/islands/shalaKhulia";
+import "./topographies/islands/polyargos";
+import "./topographies/islands/colchis";
+import "./topographies/islands/umbrin";
+import "./topographies/islands/ilyrean";
+import "./topographies/islands/suliel";
+import "./topographies/islands/minos";
+import "./topographies/islands/mysia";
+import "./topographies/islands/tearsOfSarapis";
+import "./topographies/islands/tuar";
+import "./topographies/islands/ulangi";
+import "./topographies/islands/zanzibar";
+
+import "./topographies/chops/chopsWest";
+import "./topographies/chops/chopsNorth";
+import "./topographies/chops/chopsTasurke";
+import "./topographies/chops/chopsTenwat";
+
+import "./topographies/roughs/roughsWest";
+import "./topographies/roughs/roughsPhereklos";
+import "./topographies/roughs/roughsAgeiro";
+import "./topographies/roughs/roughsHaraeSouth";
+import "./topographies/roughs/roughsZanzibar";
+import "./topographies/roughs/roughsSouth";
 
 const unitWidth = 10;
 const unitHeight = 10;
@@ -39,14 +78,14 @@ const drawMap = ({ context, path, transform }) => {
   drawFeatures({
     context: context,
     path: path,
-    type: "lowmt",
-    rgba: "rgba( 130, 100,  70, 0.65)",
+    type: "swamp",
+    rgba: "rgba(  10,  60,  30, 0.85)",
   });
   drawFeatures({
     context: context,
     path: path,
-    type: "swamp",
-    rgba: "rgba(  10,  60,  30, 0.85)",
+    type: "lowmt",
+    rgba: "rgba( 130, 100,  70, 0.65)",
   });
   drawFeatures({
     context: context,
@@ -60,6 +99,80 @@ const drawMap = ({ context, path, transform }) => {
     type: "roughs",
     rgba: "rgba( 165, 185, 195, 0.15)",
   });
+
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "nnnbb",
+    rgba: 'rgba(  85,  55,   1, 0.65)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "nnnbr",
+    rgba: 'rgba( 165, 135, 100, 0.75)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "___br",
+    rgba: 'rgba( 200, 180, 145, 0.65)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "...wt",
+    rgba: 'rgba( 200, 200, 215, 0.65)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "WWbwn",
+    rgba: 'rgba(  95,  45,  45, 0.55)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "YYred",
+    rgba: 'rgba( 215,  25,   5, 0.25)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "__blk",
+    rgba: 'rgba(  15,  15,  15, 0.75)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "##bwn",
+    rgba: 'rgba( 110,  85,  60, 0.75)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "..blk",
+    rgba: 'rgba( 165,  15,  15, 0.35)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "##ylw",
+    rgba: 'rgba( 165, 206,  65, 0.35)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "..wht",
+    rgba: 'rgba( 200, 200, 215, 0.65)',
+  });
+  drawFeatures({
+    context: context,
+    path: path,
+    type: "mmblk",
+    rgba: 'rgba( 165, 206,  65, 0.35)',
+  });
+
   drawGrid({ context: context, transform: transform });
 };
 

@@ -18,6 +18,12 @@ export const topoj = {
     ], // Sea Lion Cove
   ],
   objects: {
+    ships: {
+      type: "GeometryCollection",
+      geometries: [
+
+      ]
+    },
     ports: {
       type: "GeometryCollection",
       geometries: [
@@ -35,21 +41,17 @@ export const topoj = {
         },
       ],
     },
+    reefs: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
     marsh: {
       type: "GeometryCollection",
       geometries: [
         // {type: 'Polygon',arcs:[[5,6,7]],id:'MP-SK'}, /* DON'T DELETE, Sample
       ],
     },
-    chops: {
-      type: "GeometryCollection",
-      geometries: [],
-    },
     grass: {
-      type: "GeometryCollection",
-      geometries: [],
-    },
-    swamp: {
       type: "GeometryCollection",
       geometries: [],
     },
@@ -57,15 +59,67 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
+    swamp: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
     lowmt: {
       type: "GeometryCollection",
       geometries: [],
     },
-    reefs: {
+    chops: {
       type: "GeometryCollection",
       geometries: [],
     },
     roughs: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    nnnbb: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    nnnbr: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    ___br: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "...wt": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "WWbwn": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "YYred": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "__blk": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "##bwn": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "..blk": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "##ylw": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "..wht": {
+      type: "GeometryCollection",
+      geometries: [],
+    },
+    "mmblk": {
       type: "GeometryCollection",
       geometries: [],
     },

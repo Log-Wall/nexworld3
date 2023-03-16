@@ -1,4 +1,4 @@
-import { insert } from "../topo";
+import { insert } from "../../topo";
 
 const features = [
   {

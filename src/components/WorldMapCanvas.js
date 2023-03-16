@@ -1,17 +1,26 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { select } from "d3-selection";
 import { geoPath } from "d3-geo";
 import { zoom, zoomTransform } from "d3-zoom";
 import * as d3 from "d3";
 
+const ship = () => {
+  return (
+    <svg width="100" height="100">
+      <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+    </svg>
+  );
+};
 
 const WorldMapCanvas = ({ nexWorld, setCoords }) => {
+  const [location, setLocation] = useState([0, 0]);
+  nexWorld.setLocation = setLocation;
   const canvasRef = useRef();
   const z = zoom().scaleExtent([1 / 27, 85]);
 
   useEffect(() => {
     const canvas = select(canvasRef.current);
-    const context = canvasRef.current.getContext("2d");
+    const context = canvasRef.current.getContext("2d"/*, { alpha: false }*/);
 
     //const width = canvas.node().parentElement.clientWidth;
     //const height = canvas.node().parentElement.clientHeight;
@@ -60,8 +69,13 @@ const WorldMapCanvas = ({ nexWorld, setCoords }) => {
     // Set initial starting coordinate view [0, 0]
     z.translateBy(select(canvasRef.current), canvasRef.current.width / 2 - (0 * nexWorld.unitWidth), canvasRef.current.height / 2 + (0 * nexWorld.unitHeight));
     // Set initial zoom scale
-    z.scaleTo(select(canvasRef.current), 0.85);
+    z.scaleTo(select(canvasRef.current), 0.15);
   }, []);
+
+  useEffect(() => {
+    const canvas = select(canvasRef.current);
+    const context = canvasRef.current.getContext("2d"/*, { alpha: false }*/);
+  }, [location]);
 
   return <canvas ref={canvasRef} style={{
     background: "rgba(20, 60, 135, 0.93)",
