@@ -175,7 +175,8 @@ const drawMap = ({ context, path, transform }) => {
   });
 
   drawGrid({ context: context, transform: transform });
-  drawShip({ coords: nexWorld.location });
+  drawShip({ context: context, transform: transform, coords: nexWorld.location });
+
   context.restore();
 };
 
@@ -218,77 +219,155 @@ const drawGrid = ({ context, transform }) => {
   context.closePath();
 };
 
-const drawShip = ({ coords, direction }) => {
-  nexWorld.context.closePath();
-  //context.save();
-  //context.translate(0, 0);
-  //context.rotate((45 * Math.PI) / 180);
-  //const { x, y } = coords;
+const drawShip = ({ context, transform, coords }) => {
+  context.closePath();
+
+  let angle = 0;
+  switch (nexWorld.direction) {
+    case "n":
+      angle = 0;
+      break;
+    case "nne":
+      angle = 26.57;
+      break;
+    case "ne":
+      angle = 45;
+      break;
+    case "ene":
+      angle = 71.57;
+      break;
+    case "e":
+      angle = 90;
+      break;
+    case "ese":
+      angle = 116.57;
+      break;
+    case "se":
+      angle = 135;
+      break;
+    case "sse":
+      angle = 161.57;
+      break;
+    case "s":
+      angle = 180;
+      break;
+    case "ssw":
+      angle = 206.57;
+      break;
+    case "sw":
+      angle = 225;
+      break;
+    case "wsw":
+      angle = 251.57;
+      break;
+    case "w":
+      angle = 270;
+      break;
+    case "wnw":
+      angle = 296.57;
+      break;
+    case "nw":
+      angle = 315;
+      break;
+    case "nnw":
+      angle = 341.57;
+      break;
+    default:
+      angle = 0;
+  }
+  let scale = 1;
+  switch (true) {
+    case transform.k < 0.05:
+      scale = 100;
+      break;
+    case transform.k < 0.15:
+      scale = 50;
+      break;
+    case transform.k < 0.35:
+      scale = 20;
+      break;
+    case transform.k < 0.8:
+      scale = 10;
+      break;
+    case transform.k < 1.4:
+      scale = 5;
+      break;
+    default:
+      scale = 1;
+      break;
+  }
+
   const x = coords[0] * 10;
   const y = coords[1] * 10;
-  /*
-    context.beginPath();
-    context.fillStyle = 'red';
-    context.strokeStyle = 'red';
-    context.lineWidth = 0.25;
-    context.moveTo(x, y);
-    context.lineTo(x, y - 100);
-    context.lineTo(x + 2, y - 98);
-    context.lineTo(x - 2, y - 98);
-    context.lineTo(x, y - 100);
-    context.fill();
-    context.stroke();
-    context.closePath();
-  */
+
+  context.translate(x, y);
+  context.rotate((angle * Math.PI) / 180);
+  context.scale(scale, scale);
+  context.translate(-x, -y);
+
+  context.beginPath();
+  context.fillStyle = 'red';
+  context.strokeStyle = 'red';
+  context.lineWidth = 0.25;
+  context.moveTo(x, y);
+  context.lineTo(x, y - 100);
+  context.lineTo(x + 2, y - 98);
+  context.lineTo(x - 2, y - 98);
+  context.lineTo(x, y - 100);
+  context.fill();
+  context.stroke();
+  context.closePath();
 
 
-  nexWorld.context.fillStyle = 'rgb(139,69,19)';
-  nexWorld.context.lineWidth = 0.25;
-  nexWorld.context.strokeStyle = 'black';
-  nexWorld.context.beginPath();
-  nexWorld.context.moveTo(x, y);
-  nexWorld.context.lineTo(x, y - 5);
-  nexWorld.context.quadraticCurveTo(x + 2, y - 3, x + 2, y);
-  nexWorld.context.quadraticCurveTo(x + 2, y + 4, x + 0.5, y + 4);
-  nexWorld.context.lineTo(x - 0.5, y + 4);
-  nexWorld.context.quadraticCurveTo(x - 2, y + 4, x - 2, y);
-  nexWorld.context.quadraticCurveTo(x - 2, y - 3, x, y - 5);
-  nexWorld.context.fill();
-  nexWorld.context.stroke();
-  nexWorld.context.closePath();
 
-  nexWorld.context.fillStyle = 'white';
-  nexWorld.context.beginPath();
-  nexWorld.context.moveTo(x - 3, y - 2);
-  nexWorld.context.quadraticCurveTo(x, y - 3.5, x + 3, y - 2);
-  nexWorld.context.fill();
-  nexWorld.context.closePath();
-  nexWorld.context.beginPath();
-  nexWorld.context.moveTo(x, y + 1);
-  nexWorld.context.quadraticCurveTo(x + 2, y - 1, x + 4, y + 1);
-  nexWorld.context.lineTo(x - 4, y + 1);
-  nexWorld.context.quadraticCurveTo(x - 2, y - 1, x, y + 1);
-  nexWorld.context.fill();
-  nexWorld.context.closePath();
 
-  nexWorld.context.beginPath();
-  nexWorld.context.strokeStyle = 'black';
-  nexWorld.context.lineWidth = 0.25;
-  nexWorld.context.fillStyle = "	rgb(105,105,105)";
-  nexWorld.context.arc(x, y - 2, 0.5, 0, 360, false);
-  nexWorld.context.fill();
-  nexWorld.context.stroke();
-  nexWorld.context.closePath();
-  nexWorld.context.beginPath();
-  nexWorld.context.strokeStyle = 'black';
-  nexWorld.context.lineWidth = 0.25;
-  nexWorld.context.fillStyle = "	rgb(105,105,105)";
-  nexWorld.context.arc(x, y + 1, 0.5, 0, 360, false);
-  nexWorld.context.fill();
-  nexWorld.context.stroke();
-  nexWorld.context.closePath();
+  context.fillStyle = 'rgb(139,69,19)';
+  context.lineWidth = 0.25;
+  context.strokeStyle = 'black';
+  context.beginPath();
+  context.moveTo(x, y);
+  context.lineTo(x, y - 5);
+  context.quadraticCurveTo(x + 2, y - 3, x + 2, y);
+  context.quadraticCurveTo(x + 2, y + 4, x + 0.5, y + 4);
+  context.lineTo(x - 0.5, y + 4);
+  context.quadraticCurveTo(x - 2, y + 4, x - 2, y);
+  context.quadraticCurveTo(x - 2, y - 3, x, y - 5);
+  context.fill();
+  context.stroke();
+  context.closePath();
 
-  nexWorld.context.restore();
+  context.fillStyle = 'white';
+  context.beginPath();
+  context.moveTo(x - 3, y - 2);
+  context.quadraticCurveTo(x, y - 3.5, x + 3, y - 2);
+  context.fill();
+  context.closePath();
+  context.beginPath();
+  context.moveTo(x, y + 1);
+  context.quadraticCurveTo(x + 2, y - 1, x + 4, y + 1);
+  context.lineTo(x - 4, y + 1);
+  context.quadraticCurveTo(x - 2, y - 1, x, y + 1);
+  context.fill();
+  context.closePath();
+
+  context.beginPath();
+  context.strokeStyle = 'black';
+  context.lineWidth = 0.25;
+  context.fillStyle = "	rgb(105,105,105)";
+  context.arc(x, y - 2, 0.5, 0, 360, false);
+  context.fill();
+  context.stroke();
+  context.closePath();
+  context.beginPath();
+  context.strokeStyle = 'black';
+  context.lineWidth = 0.25;
+  context.fillStyle = "	rgb(105,105,105)";
+  context.arc(x, y + 1, 0.5, 0, 360, false);
+  context.fill();
+  context.stroke();
+  context.closePath();
+
+  context.restore();
 
 };
 const drawFeatures = ({ context, path, type, rgba }) => {
@@ -304,14 +383,81 @@ const drawFeatures = ({ context, path, type, rgba }) => {
   context.closePath();
 };
 
+const moveShip = (direction) => {
+  let newCoords = [0, 0];
+  switch (direction) {
+    case "n":
+      newCoords = [0, -1];
+      break;
+    case "nne":
+      newCoords = 26.57;
+      break;
+    case "ne":
+      newCoords = [1, -1];
+      break;
+    case "ene":
+      newCoords = 71.57;
+      break;
+    case "e":
+      newCoords = [1, 0];
+      break;
+    case "ese":
+      newCoords = 116.57;
+      break;
+    case "se":
+      newCoords = [1, 1];
+      break;
+    case "sse":
+      newCoords = 161.57;
+      break;
+    case "s":
+      newCoords = [0, 1];
+      break;
+    case "ssw":
+      newCoords = 206.57;
+      break;
+    case "sw":
+      newCoords = 225;
+      break;
+    case "wsw":
+      newCoords = 251.57;
+      break;
+    case "w":
+      newCoords = [-1, 0];
+      break;
+    case "wnw":
+      newCoords = 296.57;
+      break;
+    case "nw":
+      newCoords = [-1, -1];
+      break;
+    case "nnw":
+      newCoords = 341.57;
+      break;
+    default:
+      newCoords = [0, 0];
+  }
+
+  nexWorld.direction = direction;
+  nexWorld.location[0] += newCoords[0];
+  nexWorld.location[1] += newCoords[1];
+  nexWorld.move = [...newCoords];
+  nexWorld.evt.dispatchEvent(new CustomEvent('nexWorld-location-update', { detail: [...nexWorld.location] }));
+};
+
 export const nexWorld = {
+  evt: new EventTarget(),
   drawMap: drawMap,
   drawGrid: drawGrid,
   drawShip: drawShip,
+  setLocation() { },
+  moveShip: moveShip,
   unitHeight: unitHeight,
   unitWidth: unitWidth,
   topoj: topoj,
   location: [0, 0],
+  move: [0, 0],
+  direction: "n",
 };
 
 window.nexWorld = nexWorld;
