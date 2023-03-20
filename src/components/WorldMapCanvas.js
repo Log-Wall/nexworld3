@@ -43,6 +43,10 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
 
     zoomRef.current = zoom()
       .scaleExtent([1 / 27, 85])
+      .translateExtent([
+        [-10000, -10000], // set your desired min x and min y values
+        [width + 10000, height + 10000], // set your desired max x and max y values
+      ])
       .on("zoom", ({ transform }) => {
         context.save();
         context.clearRect(0, 0, width, height);
@@ -58,8 +62,12 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
         });
         context.restore();
         console.log("zoom event");
+        console.log([width, height]);
         console.log(transform);
         setZoomState(transform);
+      })
+      .on("end", () => {
+        console.log("end");
       });
 
     canvas.call(zoomRef.current);
@@ -122,7 +130,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       zt.y / 10
     );
     // Set initial zoom scale
-    zoomRef.current.scaleTo(select(canvasRef.current), zt.k);
+    zoomRef.current.transform(select(canvasRef.current), zoomState);
   }, [location]);
 
   useEffect(() => {
@@ -151,13 +159,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       ref={canvasRef}
       style={{
         background: "rgba(20, 60, 135, 0.93)",
-        position: "absolute",
-        //position: "relative",
-        //left: "50%",
-        //top: "50%",
-        //width: "960",
-        //height: "500",
-        //transform: "translate(-50%, -50%)",
+        //position: "absolute",
       }}
     />
   );
