@@ -1,0 +1,11 @@
+{
+  "name": "nexworld",
+  "version": "0.1.0",
+  "description": "nexWorld for nexus",
+  "main": "nexworld.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Khaseem",
+  "license": "ISC"
+}

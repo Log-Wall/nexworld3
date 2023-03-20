@@ -12,11 +12,12 @@ import {
   Paper,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import NexWorld from "./NexWorld";
 import CoordinateDisplay from "./CoordinateDisplay";
+import ShipCoordinates from "./ShipCoordinates";
 
 let darkTheme = createTheme({
   palette: {
@@ -96,10 +97,17 @@ const NexDialog = ({ nexWorld }) => {
   const [height, setHeight] = useState(500);
   const [width, setWidth] = useState(500);
   const [coords, setCoords] = useState([0, 0]);
+  const [location, setLocation] = useState([0, 0]);
 
-  nexWorld.evt.addEventListener("nexWorld-open-dialog", ({ detail }) => {
-    setOpen(detail);
-  });
+  useEffect(() => {
+    nexWorld.evt.addEventListener("nexWorld-open-dialog", ({ detail }) => {
+      setOpen(detail);
+    });
+    nexWorld.evt.addEventListener("nexWorld-location-update", ({ detail }) => {
+      setLocation(detail);
+    });
+  }, []);
+
 
   const handleClickClose = () => {
     setOpen(false);
@@ -141,6 +149,7 @@ const NexDialog = ({ nexWorld }) => {
                 }}
               >
                 <span>nexWorld Map</span>
+                <ShipCoordinates coords={location} />
                 <CoordinateDisplay coords={coords} />
               </div>
             </DialogTitle>
@@ -149,7 +158,7 @@ const NexDialog = ({ nexWorld }) => {
                 background: "#121212",
                 height: `${height}px`,
                 width: `${width}px`,
-                //overflow: "hidden",
+                overflow: "hidden",
               }}
             >
               <NexWorld
@@ -160,10 +169,10 @@ const NexDialog = ({ nexWorld }) => {
               />
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={handleClickClose}>
-                Cancel
+              <Button autoFocus onClick={() => { nexWorld.center(nexWorld.location); }}>
+                Recenter
               </Button>
-              <Button onClick={handleClickSave}>Save</Button>
+              <Button onClick={handleClickClose}>close</Button>
             </DialogActions>
           </>
         </Resizable>

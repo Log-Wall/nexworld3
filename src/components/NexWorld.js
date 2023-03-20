@@ -2,7 +2,7 @@ import WorldMapCanvas from "./WorldMapCanvas";
 
 const NexWorld = ({ nexWorld, setCoords, width, height }) => {
   return (
-    <div style={{ position: "relative", overflow: "visible" }}>
+    <div>
       <WorldMapCanvas
         nexWorld={nexWorld}
         setCoords={setCoords}

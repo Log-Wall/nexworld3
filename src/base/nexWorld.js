@@ -308,7 +308,7 @@ const drawShip = ({ context, transform, coords }) => {
   context.save();
   context.translate(x, y);
   context.rotate((angle * Math.PI) / 180);
-  //context.scale(scale, scale);
+  context.scale(scale, scale);
   context.translate(-x, -y);
 
   context.beginPath();
@@ -452,7 +452,15 @@ const moveShip = (direction) => {
   );
 };
 
-const center = (args) => {
+const center = () => {
+  nexWorld.follow = true;
+
+  nexWorld.zoomRef.translateTo(
+    nexWorld.selection,
+    nexWorld.location[0] * nexWorld.unitWidth,
+    nexWorld.location[1] * nexWorld.unitHeight
+  );
+  return;
   nexWorld.evt.dispatchEvent(
     new CustomEvent("nexWorld-location-center", {
       detail: args || [...nexWorld.location],
@@ -491,12 +499,11 @@ const startup = () => {
 export const nexWorld = {
   evt: new EventTarget(),
   component: NexDialog,
-  //component: DraggableDialog,
 
   drawMap: drawMap,
   drawGrid: drawGrid,
   drawShip: drawShip,
-  setLocation() {},
+  setLocation() { },
   moveShip: moveShip,
   startup: startup,
   center: center,
@@ -507,11 +514,8 @@ export const nexWorld = {
   location: [0, 0],
   move: [0, 0],
   direction: "se",
+  follow: true,
 };
 
 window.nexWorld = nexWorld;
 nexWorld.startup();
-
-//drawFeatures("reefs", "rgba( 100, 130, 180, 0.55)");
-//drawFeatures("marsh", "rgba(  55, 140, 135, 0.88)");
-//drawFeatures("grass", "rgba(  65, 150,  65, 0.25)");

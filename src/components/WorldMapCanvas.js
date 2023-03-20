@@ -5,8 +5,7 @@ import { zoom, zoomTransform } from "d3-zoom";
 import * as d3 from "d3";
 
 const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
-  const [location, setLocation] = useState([0, 0]);
-  const [center, setCenter] = useState([0, 0]);
+  const [location, setLocation] = useState({ previous: [0, 0], current: [0, 0] });
   const [context, setContext] = useState();
   const [zoomState, setZoomState] = useState();
   const [firstRender, setFirstRender] = useState(true);
@@ -14,21 +13,15 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
   const canvasRef = useRef();
   const zoomRef = useRef();
   const pathRef = useRef();
-  const projection = (coords) => {
-    const [x, y] = [...coords];
-    return [
-      width / 2 - x * nexWorld.unitWidth,
-      height / 2 - y * nexWorld.unitHeight,
-    ];
-  };
 
-  nexWorld.evt.addEventListener("nexWorld-location-update", ({ detail }) => {
-    setLocation(detail);
-  });
-
-  nexWorld.evt.addEventListener("nexWorld-location-center", ({ detail }) => {
-    setCenter(detail);
-  });
+  useEffect(() => {
+    nexWorld.evt.addEventListener("nexWorld-location-update", ({ detail }) => {
+      setLocation((prevState) => ({
+        ...{ previous: [...prevState.current] },
+        current: detail
+      }));
+    });
+  }, []);
 
   useEffect(() => {
     console.log("render");
@@ -61,13 +54,8 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
           transform: transform,
         });
         context.restore();
-        console.log("zoom event");
-        console.log([width, height]);
-        console.log(transform);
+
         setZoomState(transform);
-      })
-      .on("end", () => {
-        console.log("end");
       });
 
     canvas.call(zoomRef.current);
@@ -82,6 +70,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     });
 
     context.save();
+
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
@@ -94,14 +83,18 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     // Set initial starting coordinate view [0, 0]
     zoomRef.current.translateTo(
       select(canvasRef.current),
-      location[0],
-      location[1]
+      location.current[0],
+      location.current[1]
     );
     // Set initial zoom scale
     zoomRef.current.scaleTo(select(canvasRef.current), 2);
 
     context.restore();
 
+    nexWorld.zoomRef = zoomRef.current;
+    nexWorld.selection = select(canvasRef.current);
+
+    //Debug statements
     window.cc1 = canvas;
     window.zr = zoomRef.current;
     window.zt = zoomTransform(canvasRef.current);
@@ -112,43 +105,28 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       setFirstRender(false);
       return;
     }
-    console.log("location");
-    //console.log(zoomRef.current.transform());
-    const zt = zoomTransform(canvasRef.current);
+
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
       path: pathRef.current,
       width: width,
       height: height,
-      transform: zt,
+      transform: zoomState,
     });
 
-    zoomRef.current.translateTo(
-      select(canvasRef.current),
-      zt.x / 10,
-      zt.y / 10
-    );
-    // Set initial zoom scale
-    zoomRef.current.transform(select(canvasRef.current), zoomState);
-  }, [location]);
-
-  useEffect(() => {
-    if (firstRender) {
-      setFirstRender(false);
-      return;
+    // Check to see if the user has panned the map. If they have, do not automaticlaly recenter on location update
+    if (zoomState.x !== -location.previous[0] * 20 + 250 || zoomState.y !== -location.previous[1] * 20 + 250) {
+      console.log('state mismatch');
+      nexWorld.follow = false;
     }
-    console.log("center");
-    const newTransform = { x: 1, y: 2, k: 1 };
 
-    // create a new CustomEvent for the zoom event with the new transform values
-    //zoomRef.current.scaleTo(select(canvasRef.current), 0.5);
-    zoomRef.current.translateTo(
-      select(canvasRef.current),
-      center[0] * nexWorld.unitWidth,
-      center[1] * nexWorld.unitHeight
-    );
-  }, [center]);
+    if (!nexWorld.follow) {
+      zoomRef.current.transform(select(canvasRef.current), zoomState);
+    } else {
+      nexWorld.center();
+    }
+  }, [location]);
 
   useEffect(() => {
     window.ctx = context;
@@ -159,7 +137,6 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       ref={canvasRef}
       style={{
         background: "rgba(20, 60, 135, 0.93)",
-        //position: "absolute",
       }}
     />
   );
