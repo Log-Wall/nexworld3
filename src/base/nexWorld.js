@@ -1,6 +1,7 @@
 import * as topojson from "topojson-client";
 import { topoj } from "./topo";
 
+import NexDialog from "../components/NexDialog";
 import "./topographies/mainlandReefs/mainlandMiddleEast";
 import "./topographies/mainlandReefs/mainlandMiddleWest";
 import "./topographies/mainlandReefs/mainlandNorth";
@@ -47,11 +48,12 @@ import "./topographies/roughs/roughsSouth";
 
 const unitWidth = 10;
 const unitHeight = 10;
-const gridWidth = 20000;
-const gridHeight = 20000;
+const gridWidth = 10000;
+const gridHeight = 10000;
 
-const drawMap = ({ context, path, transform }) => {
-
+const drawMap = ({ context, path, transform, width, height }) => {
+  context.save();
+  context.clearRect(0, 0, width, height);
   drawFeatures({
     context: context,
     path: path,
@@ -105,82 +107,87 @@ const drawMap = ({ context, path, transform }) => {
     context: context,
     path: path,
     type: "nnnbb",
-    rgba: 'rgba(  85,  55,   1, 0.65)',
+    rgba: "rgba(  85,  55,   1, 0.65)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "nnnbr",
-    rgba: 'rgba( 165, 135, 100, 0.75)',
+    rgba: "rgba( 165, 135, 100, 0.75)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "___br",
-    rgba: 'rgba( 200, 180, 145, 0.65)',
+    rgba: "rgba( 200, 180, 145, 0.65)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "...wt",
-    rgba: 'rgba( 200, 200, 215, 0.65)',
+    rgba: "rgba( 200, 200, 215, 0.65)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "WWbwn",
-    rgba: 'rgba(  95,  45,  45, 0.55)',
+    rgba: "rgba(  95,  45,  45, 0.55)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "YYred",
-    rgba: 'rgba( 215,  25,   5, 0.25)',
+    rgba: "rgba( 215,  25,   5, 0.25)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "__blk",
-    rgba: 'rgba(  15,  15,  15, 0.75)',
+    rgba: "rgba(  15,  15,  15, 0.75)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "##bwn",
-    rgba: 'rgba( 110,  85,  60, 0.75)',
+    rgba: "rgba( 110,  85,  60, 0.75)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "..blk",
-    rgba: 'rgba( 165,  15,  15, 0.35)',
+    rgba: "rgba( 165,  15,  15, 0.35)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "##ylw",
-    rgba: 'rgba( 165, 206,  65, 0.35)',
+    rgba: "rgba( 165, 206,  65, 0.35)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "..wht",
-    rgba: 'rgba( 200, 200, 215, 0.65)',
+    rgba: "rgba( 200, 200, 215, 0.65)",
   });
   drawFeatures({
     context: context,
     path: path,
     type: "mmblk",
-    rgba: 'rgba( 165, 206,  65, 0.35)',
+    rgba: "rgba( 165, 206,  65, 0.35)",
   });
 
   drawGrid({ context: context, transform: transform });
-  drawShip({ context: context, transform: transform, coords: nexWorld.location });
+  drawShip({
+    context: context,
+    transform: transform,
+    coords: nexWorld.location,
+  });
 
   context.restore();
 };
 
 const drawGrid = ({ context, transform }) => {
+  context.closePath();
   context.beginPath();
   context.lineWidth = 0.5;
   context.strokeStyle = "rgba( 15, 35, 75,0.45)";
@@ -221,7 +228,6 @@ const drawGrid = ({ context, transform }) => {
 
 const drawShip = ({ context, transform, coords }) => {
   context.closePath();
-
   let angle = 0;
   switch (nexWorld.direction) {
     case "n":
@@ -234,7 +240,7 @@ const drawShip = ({ context, transform, coords }) => {
       angle = 45;
       break;
     case "ene":
-      angle = 71.57;
+      angle = 63.43;
       break;
     case "e":
       angle = 90;
@@ -246,7 +252,7 @@ const drawShip = ({ context, transform, coords }) => {
       angle = 135;
       break;
     case "sse":
-      angle = 161.57;
+      angle = 153.43;
       break;
     case "s":
       angle = 180;
@@ -258,7 +264,7 @@ const drawShip = ({ context, transform, coords }) => {
       angle = 225;
       break;
     case "wsw":
-      angle = 251.57;
+      angle = 243.43;
       break;
     case "w":
       angle = 270;
@@ -270,7 +276,7 @@ const drawShip = ({ context, transform, coords }) => {
       angle = 315;
       break;
     case "nnw":
-      angle = 341.57;
+      angle = 333.43;
       break;
     default:
       angle = 0;
@@ -299,15 +305,15 @@ const drawShip = ({ context, transform, coords }) => {
 
   const x = coords[0] * 10;
   const y = coords[1] * 10;
-
+  context.save();
   context.translate(x, y);
   context.rotate((angle * Math.PI) / 180);
-  context.scale(scale, scale);
+  //context.scale(scale, scale);
   context.translate(-x, -y);
 
   context.beginPath();
-  context.fillStyle = 'red';
-  context.strokeStyle = 'red';
+  context.fillStyle = "red";
+  context.strokeStyle = "red";
   context.lineWidth = 0.25;
   context.moveTo(x, y);
   context.lineTo(x, y - 100);
@@ -318,12 +324,9 @@ const drawShip = ({ context, transform, coords }) => {
   context.stroke();
   context.closePath();
 
-
-
-
-  context.fillStyle = 'rgb(139,69,19)';
+  context.fillStyle = "rgb(139,69,19)";
   context.lineWidth = 0.25;
-  context.strokeStyle = 'black';
+  context.strokeStyle = "black";
   context.beginPath();
   context.moveTo(x, y);
   context.lineTo(x, y - 5);
@@ -336,7 +339,7 @@ const drawShip = ({ context, transform, coords }) => {
   context.stroke();
   context.closePath();
 
-  context.fillStyle = 'white';
+  context.fillStyle = "white";
   context.beginPath();
   context.moveTo(x - 3, y - 2);
   context.quadraticCurveTo(x, y - 3.5, x + 3, y - 2);
@@ -351,7 +354,7 @@ const drawShip = ({ context, transform, coords }) => {
   context.closePath();
 
   context.beginPath();
-  context.strokeStyle = 'black';
+  context.strokeStyle = "black";
   context.lineWidth = 0.25;
   context.fillStyle = "	rgb(105,105,105)";
   context.arc(x, y - 2, 0.5, 0, 360, false);
@@ -359,7 +362,7 @@ const drawShip = ({ context, transform, coords }) => {
   context.stroke();
   context.closePath();
   context.beginPath();
-  context.strokeStyle = 'black';
+  context.strokeStyle = "black";
   context.lineWidth = 0.25;
   context.fillStyle = "	rgb(105,105,105)";
   context.arc(x, y + 1, 0.5, 0, 360, false);
@@ -368,7 +371,6 @@ const drawShip = ({ context, transform, coords }) => {
   context.closePath();
 
   context.restore();
-
 };
 const drawFeatures = ({ context, path, type, rgba }) => {
   const feature = topojson.feature(topoj, topoj.objects[type]);
@@ -390,49 +392,49 @@ const moveShip = (direction) => {
       newCoords = [0, -1];
       break;
     case "nne":
-      newCoords = 26.57;
+      newCoords = [0, -1];
       break;
     case "ne":
       newCoords = [1, -1];
       break;
     case "ene":
-      newCoords = 71.57;
+      newCoords = [0, -1];
       break;
     case "e":
       newCoords = [1, 0];
       break;
     case "ese":
-      newCoords = 116.57;
+      newCoords = [0, -1];
       break;
     case "se":
       newCoords = [1, 1];
       break;
     case "sse":
-      newCoords = 161.57;
+      newCoords = [0, -1];
       break;
     case "s":
       newCoords = [0, 1];
       break;
     case "ssw":
-      newCoords = 206.57;
+      newCoords = [0, -1];
       break;
     case "sw":
-      newCoords = 225;
+      newCoords = [-1, 1];
       break;
     case "wsw":
-      newCoords = 251.57;
+      newCoords = [0, -1];
       break;
     case "w":
       newCoords = [-1, 0];
       break;
     case "wnw":
-      newCoords = 296.57;
+      newCoords = [0, -1];
       break;
     case "nw":
       newCoords = [-1, -1];
       break;
     case "nnw":
-      newCoords = 341.57;
+      newCoords = [0, -1];
       break;
     default:
       newCoords = [0, 0];
@@ -442,25 +444,73 @@ const moveShip = (direction) => {
   nexWorld.location[0] += newCoords[0];
   nexWorld.location[1] += newCoords[1];
   nexWorld.move = [...newCoords];
-  nexWorld.evt.dispatchEvent(new CustomEvent('nexWorld-location-update', { detail: [...nexWorld.location] }));
+
+  nexWorld.evt.dispatchEvent(
+    new CustomEvent("nexWorld-location-update", {
+      detail: [...nexWorld.location],
+    })
+  );
+};
+
+const center = (args) => {
+  nexWorld.evt.dispatchEvent(
+    new CustomEvent("nexWorld-location-center", {
+      detail: args || [...nexWorld.location],
+    })
+  );
+};
+
+const startup = () => {
+  if (typeof ReactDOM === "undefined") {
+    return;
+  }
+
+  nexSys.checkForUpdate();
+
+  if (!document.getElementById("modal-root")) {
+    document
+      .getElementsByTagName("body")[0]
+      .appendChild(
+        Object.assign(document.createElement("div"), { id: "modal-root" })
+      );
+  }
+
+  document.getElementById("nexworld-modal")?.remove();
+  document
+    .getElementById("modal-root")
+    .appendChild(
+      Object.assign(document.createElement("div"), { id: "nexworld-modal" })
+    );
+
+  ReactDOM.render(
+    React.createElement(nexWorld.component, { nexWorld: nexWorld }),
+    document.getElementById("nexworld-modal")
+  );
 };
 
 export const nexWorld = {
   evt: new EventTarget(),
+  component: NexDialog,
+  //component: DraggableDialog,
+
   drawMap: drawMap,
   drawGrid: drawGrid,
   drawShip: drawShip,
-  setLocation() { },
+  setLocation() {},
   moveShip: moveShip,
+  startup: startup,
+  center: center,
+
   unitHeight: unitHeight,
   unitWidth: unitWidth,
   topoj: topoj,
   location: [0, 0],
   move: [0, 0],
-  direction: "n",
+  direction: "se",
 };
 
 window.nexWorld = nexWorld;
+nexWorld.startup();
 
 //drawFeatures("reefs", "rgba( 100, 130, 180, 0.55)");
 //drawFeatures("marsh", "rgba(  55, 140, 135, 0.88)");

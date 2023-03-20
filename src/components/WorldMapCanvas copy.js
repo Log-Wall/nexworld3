@@ -4,16 +4,18 @@ import { geoPath } from "d3-geo";
 import { zoom, zoomTransform } from "d3-zoom";
 import * as d3 from "d3";
 
-const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
-  const [location, setLocation] = useState([0, 0]);
+const WorldMapCanvas = ({ nexWorld, setCoords }) => {
+  const [location, setLocation] = useState([10, 10]);
   const [center, setCenter] = useState([0, 0]);
   const [context, setContext] = useState();
-  const [zoomState, setZoomState] = useState();
+  const [width, setWidth] = useState();
+  const [height, setHeight] = useState();
   const [firstRender, setFirstRender] = useState(true);
 
   const canvasRef = useRef();
   const zoomRef = useRef();
   const pathRef = useRef();
+
   const projection = (coords) => {
     const [x, y] = [...coords];
     return [
@@ -31,19 +33,27 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
   });
 
   useEffect(() => {
-    console.log("render");
     const canvas = select(canvasRef.current);
     const context = canvasRef.current.getContext("2d" /*, { alpha: false }*/);
     const path = geoPath().context(context);
     pathRef.current = path;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     setContext(context);
+    setWidth(width);
+    setHeight(height);
 
     canvas.attr("width", width).attr("height", height);
+
+    nexWorld.width = width;
+    nexWorld.height = height;
+    window.cc1 = canvas;
 
     zoomRef.current = zoom()
       .scaleExtent([1 / 27, 85])
       .on("zoom", ({ transform }) => {
+        console.log("zoom");
         context.save();
         context.clearRect(0, 0, width, height);
         context.translate(transform.x, transform.y);
@@ -52,16 +62,11 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
           context: context,
           zoom: zoomRef.current,
           path: path,
-          width: width,
-          height: height,
           transform: transform,
         });
         context.restore();
-        console.log("zoom event");
-        console.log(transform);
-        setZoomState(transform);
       });
-
+    window.zr = zoomRef.current;
     canvas.call(zoomRef.current);
 
     canvas.on("mousemove", (event) => {
@@ -74,55 +79,57 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     });
 
     context.save();
+    context.clearRect(0, 0, width, height);
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
       path: path,
-      width: width,
-      height: height,
       transform: zoomTransform(canvasRef.current),
     });
 
     // Set initial starting coordinate view [0, 0]
-    zoomRef.current.translateTo(
-      select(canvasRef.current),
-      location[0],
-      location[1]
-    );
+    zoomRef.current.translateTo(select(canvasRef.current), 0, 0);
     // Set initial zoom scale
     zoomRef.current.scaleTo(select(canvasRef.current), 2);
 
     context.restore();
-
-    window.cc1 = canvas;
-    window.zr = zoomRef.current;
-    window.zt = zoomTransform(canvasRef.current);
-  }, [width, height]);
+  }, []);
 
   useEffect(() => {
     if (firstRender) {
       setFirstRender(false);
       return;
     }
-    console.log("location");
-    //console.log(zoomRef.current.transform());
-    const zt = zoomTransform(canvasRef.current);
+
+    const path = geoPath().context(context);
+    console.log(nexWorld.move);
+    //const newTransform = { ...transform };
+    //newTransform.x -= nexWorld.move[0] * 15;
+    //newTransform.y -= nexWorld.move[1] * 15;
+
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.scale(
+      zoomTransform(canvasRef.current).k,
+      zoomTransform(canvasRef.current).k
+    );
+    const coords = projection(location);
+    //console.log(coords);
+    context.translate(coords[0], coords[1]);
+    //context.translate(newTransform.x, newTransform.y);
+    //context.scale(newTransform.k, newTransform.k);
+    //zoomRef.current.translateBy(select(canvasRef.current), canvasRef.current.width / 2 - (location[0] * nexWorld.unitWidth), canvasRef.current.height / 2 + (location[1] * nexWorld.unitHeight));
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
-      path: pathRef.current,
-      width: width,
-      height: height,
-      transform: zt,
+      path: path,
+      //transform: newTransform || context.getTransform(),
+      transform: zoomTransform(canvasRef.current),
     });
 
-    zoomRef.current.translateTo(
-      select(canvasRef.current),
-      zt.x / 10,
-      zt.y / 10
-    );
-    // Set initial zoom scale
-    zoomRef.current.scaleTo(select(canvasRef.current), zt.k);
+    context.restore();
+
+    //setTransform({ ...newTransform });
   }, [location]);
 
   useEffect(() => {
@@ -153,11 +160,11 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
         background: "rgba(20, 60, 135, 0.93)",
         position: "absolute",
         //position: "relative",
-        //left: "50%",
-        //top: "50%",
+        left: "50%",
+        top: "50%",
         //width: "960",
         //height: "500",
-        //transform: "translate(-50%, -50%)",
+        transform: "translate(-50%, -50%)",
       }}
     />
   );

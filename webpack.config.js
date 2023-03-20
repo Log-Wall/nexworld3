@@ -4,11 +4,11 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: path.join(__dirname, "src/nexgui.js"),
+  entry: path.join(__dirname, "src/base/nexWorld.js"),
   //entry: path.join(__dirname, 'src/sandbox.js'),
   output: {
     path: path.join(__dirname, "dist"),
-    filename: `nexgui.min.js`,
+    filename: `nexworld.min.js`,
   },
   module: {
     rules: [
@@ -21,16 +21,21 @@ module.exports = {
         },
         loader: "babel-loader",
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   optimization: {
     minimize: true,
+
     minimizer: [
       new TerserPlugin({
         terserOptions: {
           mangle: true,
           keep_fnames: true,
-          toplevel: true,
+          toplevel: false,
           keep_classnames: true,
         },
       }),
