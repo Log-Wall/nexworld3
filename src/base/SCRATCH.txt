@@ -1,0 +1,35 @@
+The ship slowly begins to turn towards the southeast.
+The ship has turned to the east-northeast and continues to turn to the southeast.
+The ship has turned to the east and continues to turn to the southeast.
+The ship has turned to the east-southeast and continues to turn to the southeast.
+The ship completes her turn and now faces northwest.
+
+
+The ship comes out of the harbour and glides to a halt. // This moves to the ship one square in the direction it was facing.
+The ship completes docking at the harbour, and the crew lowers the anchor. // Moves the ship one square in the direction it was facing.
+
+The ship begins to move to the southeast.
+The ship moves to the east-southeast. 
+
+
+nexusclient.datahandler().on_special_display = function(type, lines, params) {
+                if (type === 'ohmap') {
+                    t.ui().layout().set_overhead_map(lines);
+                }
+                if (type === 'help')
+                    t.ui().layout().help_window(lines);
+                if (type === 'window')
+                    t.ui().layout().command_window(lines, params['cmd']);
+            };
+
+
+case "IRE.Display.Ohmap":
+        {
+            if (this._nexus.ui().layout().tab_is_active('map')) {
+                let res = {};
+                res.display = 'ohmap';
+                res.start = (gmcp_args === "start");
+                return res;
+            }
+            break;
+        }

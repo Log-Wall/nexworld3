@@ -46,6 +46,8 @@ import "./topographies/roughs/roughsHaraeSouth";
 import "./topographies/roughs/roughsZanzibar";
 import "./topographies/roughs/roughsSouth";
 
+import { topographies, toggleDirs, longDirConversion } from "./tables";
+
 const unitWidth = 10;
 const unitHeight = 10;
 const gridWidth = 10000;
@@ -54,129 +56,20 @@ const gridHeight = 10000;
 const drawMap = ({ context, path, transform, width, height }) => {
   context.save();
   context.clearRect(0, 0, width, height);
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "reefs",
-    rgba: "rgba( 100, 130, 180, 0.55)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "marsh",
-    rgba: "rgba(  55, 140, 135, 0.88)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "grass",
-    rgba: "rgba(  65, 150,  65, 0.85)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "mount",
-    rgba: "rgba( 100,  70,  35, 0.85)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "swamp",
-    rgba: "rgba(  10,  60,  30, 0.85)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "lowmt",
-    rgba: "rgba( 130, 100,  70, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "chops",
-    rgba: "rgba(   5,  20,  75, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "roughs",
-    rgba: "rgba( 165, 185, 195, 0.15)",
-  });
 
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "nnnbb",
-    rgba: "rgba(  85,  55,   1, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "nnnbr",
-    rgba: "rgba( 165, 135, 100, 0.75)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "___br",
-    rgba: "rgba( 200, 180, 145, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "...wt",
-    rgba: "rgba( 200, 200, 215, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "WWbwn",
-    rgba: "rgba(  95,  45,  45, 0.55)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "YYred",
-    rgba: "rgba( 215,  25,   5, 0.25)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "__blk",
-    rgba: "rgba(  15,  15,  15, 0.75)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "##bwn",
-    rgba: "rgba( 110,  85,  60, 0.75)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "..blk",
-    rgba: "rgba( 165,  15,  15, 0.35)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "##ylw",
-    rgba: "rgba( 165, 206,  65, 0.35)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "..wht",
-    rgba: "rgba( 200, 200, 215, 0.65)",
-  });
-  drawFeatures({
-    context: context,
-    path: path,
-    type: "mmblk",
-    rgba: "rgba( 165, 206,  65, 0.35)",
-  });
+  for (const topography in topographies) {
+    drawFeatures({
+      context: context,
+      path: path,
+      type: topography,
+      rgba: topographies[topography],
+    });
+  }
 
   drawGrid({ context: context, transform: transform });
+
+  drawPoint({ context: context, transform: transform, coords: [0, 0], radius: 5 });
+
   drawShip({
     context: context,
     transform: transform,
@@ -316,10 +209,10 @@ const drawShip = ({ context, transform, coords }) => {
   context.strokeStyle = "red";
   context.lineWidth = 0.25;
   context.moveTo(x, y);
-  context.lineTo(x, y - 100);
-  context.lineTo(x + 2, y - 98);
-  context.lineTo(x - 2, y - 98);
-  context.lineTo(x, y - 100);
+  context.lineTo(x, y - 200);
+  context.lineTo(x + 2, y - 198);
+  context.lineTo(x - 2, y - 198);
+  context.lineTo(x, y - 200);
   context.fill();
   context.stroke();
   context.closePath();
@@ -384,9 +277,34 @@ const drawFeatures = ({ context, path, type, rgba }) => {
   //context.stroke();
   context.closePath();
 };
-
-const moveShip = (direction) => {
+const drawPoint = ({ context, transform, coords, rgba, radius }) => {
+  context.closePath();
+  context.beginPath();
+  context.moveTo(coords[0], coords[1]);
+  context.arc(coords[0], coords[1], radius, 0, 2 * Math.PI);
+  context.fillStyle = rgba || 'rgba( 190, 100,  55, 1)';
+  context.fill();
+  context.fillText("?", coords[0] - 2.5, coords[1] + 3.75);
+  context.font = ``;
+  context.fillText("Shala-Khulia", coords[0] - 2.5, coords[1] - 6.25);
+  context.closePath();
+};
+const turnShip = (direction) => {
+  nexWorld.direction = direction;
+  nexWorld.evt.dispatchEvent(
+    new CustomEvent("nexWorld-direction-update", {
+      detail: direction,
+    })
+  );
+};
+const moveShip = (dir) => {
   let newCoords = [0, 0];
+  let direction = dir;
+  if (Object.keys(toggleDirs).includes(direction)) {
+    direction = toggleDirs[dir][nexWorld.directionToggle];
+    nexWorld.directionToggle = nexWorld.directionToggle ? 0 : 1;
+  }
+
   switch (direction) {
     case "n":
       newCoords = [0, -1];
@@ -440,7 +358,7 @@ const moveShip = (direction) => {
       newCoords = [0, 0];
   }
 
-  nexWorld.direction = direction;
+  nexWorld.direction = dir;
   nexWorld.location[0] += newCoords[0];
   nexWorld.location[1] += newCoords[1];
   nexWorld.move = [...newCoords];
@@ -459,12 +377,6 @@ const center = () => {
     nexWorld.selection,
     nexWorld.location[0] * nexWorld.unitWidth,
     nexWorld.location[1] * nexWorld.unitHeight
-  );
-  return;
-  nexWorld.evt.dispatchEvent(
-    new CustomEvent("nexWorld-location-center", {
-      detail: args || [...nexWorld.location],
-    })
   );
 };
 
@@ -505,6 +417,7 @@ export const nexWorld = {
   drawShip: drawShip,
   setLocation() { },
   moveShip: moveShip,
+  turnShip: turnShip,
   startup: startup,
   center: center,
 
@@ -515,6 +428,8 @@ export const nexWorld = {
   move: [0, 0],
   direction: "se",
   follow: true,
+  directionToggle: 0,
+  longDirs: longDirConversion,
 };
 
 window.nexWorld = nexWorld;

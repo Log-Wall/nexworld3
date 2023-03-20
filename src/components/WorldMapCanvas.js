@@ -9,6 +9,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
   const [context, setContext] = useState();
   const [zoomState, setZoomState] = useState();
   const [firstRender, setFirstRender] = useState(true);
+  const [direction, setDirection] = useState('n');
 
   const canvasRef = useRef();
   const zoomRef = useRef();
@@ -20,6 +21,10 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
         ...{ previous: [...prevState.current] },
         current: detail
       }));
+    });
+    nexWorld.evt.addEventListener("nexWorld-direction-update", ({ detail }) => {
+      console.log('dir event');
+      setDirection(detail);
     });
   }, []);
 
@@ -105,7 +110,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       setFirstRender(false);
       return;
     }
-
+    console.log('location');
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
@@ -126,7 +131,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     } else {
       nexWorld.center();
     }
-  }, [location]);
+  }, [location, direction]);
 
   useEffect(() => {
     window.ctx = context;
