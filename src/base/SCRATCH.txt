@@ -33,3 +33,5 @@ case "IRE.Display.Ohmap":
             }
             break;
         }
+
+{gmcp_method: 'Comm.Channel.Players', gmcp_args: Array(88)}

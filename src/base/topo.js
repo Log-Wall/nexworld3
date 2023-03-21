@@ -20,9 +20,7 @@ export const topoj = {
   objects: {
     ships: {
       type: "GeometryCollection",
-      geometries: [
-
-      ]
+      geometries: [],
     },
     ports: {
       type: "GeometryCollection",
@@ -91,15 +89,15 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
-    "WWbwn": {
+    WWbwn: {
       type: "GeometryCollection",
       geometries: [],
     },
-    "YYred": {
+    YYred: {
       type: "GeometryCollection",
       geometries: [],
     },
-    "__blk": {
+    __blk: {
       type: "GeometryCollection",
       geometries: [],
     },
@@ -119,7 +117,7 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
-    "mmblk": {
+    mmblk: {
       type: "GeometryCollection",
       geometries: [],
     },

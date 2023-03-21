@@ -3,13 +3,17 @@ import { select } from "d3-selection";
 import { geoPath } from "d3-geo";
 import { zoom, zoomTransform } from "d3-zoom";
 import * as d3 from "d3";
+import * as topojson from "topojson-client";
 
 const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
-  const [location, setLocation] = useState({ previous: [0, 0], current: [0, 0] });
+  const [location, setLocation] = useState({
+    previous: [0, 0],
+    current: [0, 0],
+  });
   const [context, setContext] = useState();
   const [zoomState, setZoomState] = useState();
   const [firstRender, setFirstRender] = useState(true);
-  const [direction, setDirection] = useState('n');
+  const [direction, setDirection] = useState("n");
 
   const canvasRef = useRef();
   const zoomRef = useRef();
@@ -19,11 +23,11 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     nexWorld.evt.addEventListener("nexWorld-location-update", ({ detail }) => {
       setLocation((prevState) => ({
         ...{ previous: [...prevState.current] },
-        current: detail
+        current: detail,
       }));
     });
     nexWorld.evt.addEventListener("nexWorld-direction-update", ({ detail }) => {
-      console.log('dir event');
+      console.log("dir event");
       setDirection(detail);
     });
   }, []);
@@ -99,7 +103,14 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     nexWorld.zoomRef = zoomRef.current;
     nexWorld.selection = select(canvasRef.current);
 
+    const pathString = path({ type: "Point", coordinates: [0, -1] });
+    const ff = topojson.feature(
+      nexWorld.topoj,
+      nexWorld.topoj.objects
+    ).features;
+    console.log(ff);
     //Debug statements
+    window.p = geoPath().context(context);
     window.cc1 = canvas;
     window.zr = zoomRef.current;
     window.zt = zoomTransform(canvasRef.current);
@@ -110,7 +121,6 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       setFirstRender(false);
       return;
     }
-    console.log('location');
     nexWorld.drawMap({
       context: context,
       zoom: zoomRef.current,
@@ -120,9 +130,13 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
       transform: zoomState,
     });
 
-    // Check to see if the user has panned the map. If they have, do not automaticlaly recenter on location update
-    if (zoomState.x !== -location.previous[0] * 20 + 250 || zoomState.y !== -location.previous[1] * 20 + 250) {
-      console.log('state mismatch');
+    // Check to see if the user has panned the map.
+    // If they have, do not automaticlaly recenter on location update
+    if (
+      zoomState.x !== -location.previous[0] * 20 + width / 2 ||
+      zoomState.y !== -location.previous[1] * 20 + height / 2
+    ) {
+      console.log("state mismatch");
       nexWorld.follow = false;
     }
 

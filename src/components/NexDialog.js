@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import NexWorld from "./NexWorld";
+import CoordinateDisplays from "./CoordinateDisplays";
 import CoordinateDisplay from "./CoordinateDisplay";
 import ShipCoordinates from "./ShipCoordinates";
 
@@ -108,7 +109,6 @@ const NexDialog = ({ nexWorld }) => {
     });
   }, []);
 
-
   const handleClickClose = () => {
     setOpen(false);
   };
@@ -149,8 +149,7 @@ const NexDialog = ({ nexWorld }) => {
                 }}
               >
                 <span>nexWorld Map</span>
-                <ShipCoordinates coords={location} />
-                <CoordinateDisplay coords={coords} />
+                <CoordinateDisplays location={location} coords={coords} />
               </div>
             </DialogTitle>
             <DialogContent
@@ -159,6 +158,7 @@ const NexDialog = ({ nexWorld }) => {
                 height: `${height}px`,
                 width: `${width}px`,
                 overflow: "hidden",
+                padding: 0,
               }}
             >
               <NexWorld
@@ -169,7 +169,12 @@ const NexDialog = ({ nexWorld }) => {
               />
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={() => { nexWorld.center(nexWorld.location); }}>
+              <Button
+                autoFocus
+                onClick={() => {
+                  nexWorld.center(nexWorld.location);
+                }}
+              >
                 Recenter
               </Button>
               <Button onClick={handleClickClose}>close</Button>

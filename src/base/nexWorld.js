@@ -52,6 +52,35 @@ const unitWidth = 10;
 const unitHeight = 10;
 const gridWidth = 10000;
 const gridHeight = 10000;
+const leaderLine = {
+  color: "red",
+  length: 200,
+};
+const scaling = (k) => {
+  let scale = 1;
+  switch (true) {
+    case k < 0.05:
+      scale = 100;
+      break;
+    case k < 0.15:
+      scale = 50;
+      break;
+    case k < 0.35:
+      scale = 20;
+      break;
+    case k < 0.8:
+      scale = 10;
+      break;
+    case k < 1.4:
+      scale = 5;
+      break;
+    default:
+      scale = 1;
+      break;
+  }
+
+  return scale;
+};
 
 const drawMap = ({ context, path, transform, width, height }) => {
   context.save();
@@ -68,7 +97,12 @@ const drawMap = ({ context, path, transform, width, height }) => {
 
   drawGrid({ context: context, transform: transform });
 
-  drawPoint({ context: context, transform: transform, coords: [0, 0], radius: 5 });
+  drawPoint({
+    context: context,
+    transform: transform,
+    coords: [0, 0],
+    radius: 5,
+  });
 
   drawShip({
     context: context,
@@ -80,35 +114,15 @@ const drawMap = ({ context, path, transform, width, height }) => {
 };
 
 const drawGrid = ({ context, transform }) => {
+  const scale = scaling(transform.k);
+
   context.closePath();
   context.beginPath();
-  context.lineWidth = 0.5;
-  context.strokeStyle = "rgba( 15, 35, 75,0.45)";
+  context.lineWidth = 0.5 * scale;
+  context.strokeStyle = "rgba( 15, 35, 75,0.75)";
 
-  let scale = 1;
-  switch (true) {
-    case transform.k < 0.05:
-      scale = 100;
-      break;
-    case transform.k < 0.15:
-      scale = 50;
-      break;
-    case transform.k < 0.35:
-      scale = 20;
-      break;
-    case transform.k < 0.8:
-      scale = 10;
-      break;
-    case transform.k < 1.4:
-      scale = 5;
-      break;
-    default:
-      scale = 1;
-      break;
-  }
-
-  const offset = unitHeight / 2;
-  for (let i = -gridWidth; i <= gridWidth; i += unitHeight * scale) {
+  const offset = unitWidth / 2;
+  for (let i = -gridWidth; i <= gridWidth; i += unitWidth * scale) {
     context.moveTo(i + offset, -gridHeight);
     context.lineTo(i + offset, gridHeight);
     context.moveTo(-gridWidth, i + offset);
@@ -174,49 +188,34 @@ const drawShip = ({ context, transform, coords }) => {
     default:
       angle = 0;
   }
-  let scale = 1;
-  switch (true) {
-    case transform.k < 0.05:
-      scale = 100;
-      break;
-    case transform.k < 0.15:
-      scale = 50;
-      break;
-    case transform.k < 0.35:
-      scale = 20;
-      break;
-    case transform.k < 0.8:
-      scale = 10;
-      break;
-    case transform.k < 1.4:
-      scale = 5;
-      break;
-    default:
-      scale = 1;
-      break;
-  }
 
-  const x = coords[0] * 10;
-  const y = coords[1] * 10;
+  const scale = scaling(transform.k);
+
+  const x = coords[0] * nexWorld.unitWidth;
+  const y = coords[1] * nexWorld.unitHeight;
+
   context.save();
+  // Rotate the drawing area based on ship direction
   context.translate(x, y);
   context.rotate((angle * Math.PI) / 180);
   context.scale(scale, scale);
   context.translate(-x, -y);
 
+  // Draw the leader line from ship
   context.beginPath();
-  context.fillStyle = "red";
-  context.strokeStyle = "red";
+  context.fillStyle = leaderLine.color;
+  context.strokeStyle = leaderLine.color;
   context.lineWidth = 0.25;
   context.moveTo(x, y);
-  context.lineTo(x, y - 200);
-  context.lineTo(x + 2, y - 198);
-  context.lineTo(x - 2, y - 198);
-  context.lineTo(x, y - 200);
+  context.lineTo(x, y - leaderLine.length);
+  context.lineTo(x + 2, y - leaderLine.length + 2);
+  context.lineTo(x - 2, y - leaderLine.length + 2);
+  context.lineTo(x, y - leaderLine.length);
   context.fill();
   context.stroke();
   context.closePath();
 
+  // Ship hull
   context.fillStyle = "rgb(139,69,19)";
   context.lineWidth = 0.25;
   context.strokeStyle = "black";
@@ -232,12 +231,15 @@ const drawShip = ({ context, transform, coords }) => {
   context.stroke();
   context.closePath();
 
+  // Ship front sail
   context.fillStyle = "white";
   context.beginPath();
   context.moveTo(x - 3, y - 2);
   context.quadraticCurveTo(x, y - 3.5, x + 3, y - 2);
   context.fill();
   context.closePath();
+
+  // Ship main sail
   context.beginPath();
   context.moveTo(x, y + 1);
   context.quadraticCurveTo(x + 2, y - 1, x + 4, y + 1);
@@ -246,6 +248,7 @@ const drawShip = ({ context, transform, coords }) => {
   context.fill();
   context.closePath();
 
+  // Ship front mast
   context.beginPath();
   context.strokeStyle = "black";
   context.lineWidth = 0.25;
@@ -254,6 +257,8 @@ const drawShip = ({ context, transform, coords }) => {
   context.fill();
   context.stroke();
   context.closePath();
+
+  // Ship main mast
   context.beginPath();
   context.strokeStyle = "black";
   context.lineWidth = 0.25;
@@ -267,6 +272,7 @@ const drawShip = ({ context, transform, coords }) => {
 };
 const drawFeatures = ({ context, path, type, rgba }) => {
   const feature = topojson.feature(topoj, topoj.objects[type]);
+  console.log(feature);
   context.fillStyle = rgba;
   context.strokeStyle = "rgba(0, 0, 0, 1)";
   context.lineWidth = 0;
@@ -274,23 +280,30 @@ const drawFeatures = ({ context, path, type, rgba }) => {
   context.beginPath();
   path(feature);
   context.fill();
-  //context.stroke();
+  //context.stroke(); // Do we want outlines? Maybe for reefs?
   context.closePath();
 };
+
 const drawPoint = ({ context, transform, coords, rgba, radius }) => {
+  // TOD How should we color the port points? All the same or by another metric?
+
+  const scale = scaling(transform.k);
   context.closePath();
   context.beginPath();
   context.moveTo(coords[0], coords[1]);
   context.arc(coords[0], coords[1], radius, 0, 2 * Math.PI);
-  context.fillStyle = rgba || 'rgba( 190, 100,  55, 1)';
+  context.fillStyle = rgba || "rgba( 190, 100,  55, 1)";
   context.fill();
+  context.fillStyle = "black";
+  context.font = "bold 12px RobotoMono Consolas monospace";
   context.fillText("?", coords[0] - 2.5, coords[1] + 3.75);
-  context.font = ``;
+  context.font = `bold ${12 * (scale / 3)}px RobotoMono Consolas monospace`;
   context.fillText("Shala-Khulia", coords[0] - 2.5, coords[1] - 6.25);
   context.closePath();
 };
 const turnShip = (direction) => {
   nexWorld.direction = direction;
+  nexWorld.directionToggle = 0;
   nexWorld.evt.dispatchEvent(
     new CustomEvent("nexWorld-direction-update", {
       detail: direction,
@@ -406,6 +419,29 @@ const startup = () => {
     React.createElement(nexWorld.component, { nexWorld: nexWorld }),
     document.getElementById("nexworld-modal")
   );
+
+  // Nexus processes the overhead map stuff in the background.
+  // This snippet also sends the information to eventStream.
+  nexusclient.datahandler().on_special_display = function (
+    type,
+    lines,
+    params
+  ) {
+    const t = nexusclient;
+    if (type === "ohmap") {
+      t.ui().layout().set_overhead_map(lines);
+      nexusclient
+        .reflexes()
+        .run_function(
+          "onGMCP",
+          { gmcp_method: "IRE.Display.Ohmap", gmcp_args: lines },
+          "eventStream3"
+        );
+      console.log({ gmcp_method: "IRE.Display.Ohmap", gmcp_args: lines });
+    }
+    if (type === "help") t.ui().layout().help_window(lines);
+    if (type === "window") t.ui().layout().command_window(lines, params["cmd"]);
+  };
 };
 
 export const nexWorld = {
@@ -415,7 +451,7 @@ export const nexWorld = {
   drawMap: drawMap,
   drawGrid: drawGrid,
   drawShip: drawShip,
-  setLocation() { },
+  setLocation() {},
   moveShip: moveShip,
   turnShip: turnShip,
   startup: startup,
@@ -430,6 +466,7 @@ export const nexWorld = {
   follow: true,
   directionToggle: 0,
   longDirs: longDirConversion,
+  leaderLine: leaderLine,
 };
 
 window.nexWorld = nexWorld;
