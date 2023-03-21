@@ -1,7 +1,4 @@
-/* eslint-disable */
-/// @ts-ignore
-//@import '../../../../node_modules/react-resizable/css/styles.css';
-/* eslint-enable */
+
 import "react-resizable/css/styles.css";
 import {
   DialogContent,
@@ -111,10 +108,6 @@ const NexDialog = ({ nexWorld }) => {
 
   const handleClickClose = () => {
     setOpen(false);
-  };
-
-  const handleClickSave = () => {
-    handleClickClose();
   };
 
   return (

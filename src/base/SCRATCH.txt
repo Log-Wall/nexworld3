@@ -35,3 +35,26 @@ case "IRE.Display.Ohmap":
         }
 
 {gmcp_method: 'Comm.Channel.Players', gmcp_args: Array(88)}
+
+
+grasslands: bg black, fg green, txt: .
+grasslands: bg grey, fg white, txt: .
+grasslands: bg green, fg yellow, txt #
+forest: bg green, fg black, txt *
+forest: bg green, fg black, txt #
+forest: bg green, fg yellowgreen, txt |
+forest: bg green, fg yellowgreen, txt T
+beach: txt (, bg black, fg tan
+beach: txt ;, bg teal, fg yellow
+freshwater: bg blue
+river: bg blue, fg white, txt ~
+urban: txt #, fg black
+ruins: txt %, bg grey, fg black
+hills: txt n, bg black, fg brown
+hills: txt n, bg tan, fg black
+valley: txt ., bg green, fg yellowgreen
+mountains: txt M, bg black, fg brown
+(impassable)mountains: txt M, bg grey, fg white
+road: txt: +, bg black, fg grey
+desert: txt: ', bg tan, fg black
+desert: bg tan

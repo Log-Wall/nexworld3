@@ -6,6 +6,7 @@ const CoordinateDisplays = ({ location, coords }) => {
           position: "relative",
           display: "flex",
           justifyContent: "space-between",
+          width: "200px"
         }}
       >
         <span>[Ship] </span>

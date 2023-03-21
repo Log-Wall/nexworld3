@@ -47,6 +47,9 @@ import "./topographies/roughs/roughsZanzibar";
 import "./topographies/roughs/roughsSouth";
 
 import { topographies, toggleDirs, longDirConversion } from "./tables";
+//import snake from './sea-serpent.svg';
+import snake from './trogdor.png';
+import tree from './tree.png';
 
 const unitWidth = 10;
 const unitHeight = 10;
@@ -110,6 +113,10 @@ const drawMap = ({ context, path, transform, width, height }) => {
     coords: nexWorld.location,
   });
 
+  const ss = new Image();
+  ss.src = snake;
+  context.drawImage(ss, (2 * 10) - 5, (4 * 10) - 5, 10, 10);
+
   context.restore();
 };
 
@@ -121,7 +128,7 @@ const drawGrid = ({ context, transform }) => {
   context.lineWidth = 0.5 * scale;
   context.strokeStyle = "rgba( 15, 35, 75,0.75)";
 
-  const offset = unitWidth / 2;
+  const offset = unitWidth / 2 * scale;
   for (let i = -gridWidth; i <= gridWidth; i += unitWidth * scale) {
     context.moveTo(i + offset, -gridHeight);
     context.lineTo(i + offset, gridHeight);
@@ -272,9 +279,8 @@ const drawShip = ({ context, transform, coords }) => {
 };
 const drawFeatures = ({ context, path, type, rgba }) => {
   const feature = topojson.feature(topoj, topoj.objects[type]);
-  console.log(feature);
   context.fillStyle = rgba;
-  context.strokeStyle = "rgba(0, 0, 0, 1)";
+  //context.strokeStyle = "rgba(0, 0, 0, 1)";
   context.lineWidth = 0;
   context.closePath();
   context.beginPath();
@@ -283,7 +289,13 @@ const drawFeatures = ({ context, path, type, rgba }) => {
   //context.stroke(); // Do we want outlines? Maybe for reefs?
   context.closePath();
 };
-
+const drawImage = ({ context, path, type, rgba }) => {
+  context.closePath();
+  context.beginPath();
+  //
+  //context.stroke(); // Do we want outlines? Maybe for reefs?
+  context.closePath();
+};
 const drawPoint = ({ context, transform, coords, rgba, radius }) => {
   // TOD How should we color the port points? All the same or by another metric?
 
@@ -297,8 +309,13 @@ const drawPoint = ({ context, transform, coords, rgba, radius }) => {
   context.fillStyle = "black";
   context.font = "bold 12px RobotoMono Consolas monospace";
   context.fillText("?", coords[0] - 2.5, coords[1] + 3.75);
-  context.font = `bold ${12 * (scale / 3)}px RobotoMono Consolas monospace`;
+  context.strokeStyle = "white";
+  context.font = `bold ${12 * (scale / 2)}px RobotoMono Consolas monospace`;
+  context.strokeText("Shala-Khulia", coords[0] - 2.5, coords[1] - 6.25);
+  context.fillStyle = "black";
+  context.font = `bold ${12 * (scale / 2)}px RobotoMono Consolas monospace`;
   context.fillText("Shala-Khulia", coords[0] - 2.5, coords[1] - 6.25);
+
   context.closePath();
 };
 const turnShip = (direction) => {
@@ -451,7 +468,7 @@ export const nexWorld = {
   drawMap: drawMap,
   drawGrid: drawGrid,
   drawShip: drawShip,
-  setLocation() {},
+  setLocation() { },
   moveShip: moveShip,
   turnShip: turnShip,
   startup: startup,
