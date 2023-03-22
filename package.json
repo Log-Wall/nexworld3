@@ -1,6 +1,6 @@
 {
   "name": "nexworld",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -50,6 +50,7 @@
   "devDependencies": {
     "css-loader": "^6.7.3",
     "style-loader": "^3.3.2",
+    "svg-inline-loader": "^0.8.2",
     "webpack-cli": "^5.0.1"
   }
 }

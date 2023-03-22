@@ -7,8 +7,8 @@ import * as topojson from "topojson-client";
 
 const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
   const [location, setLocation] = useState({
-    previous: [0, 0],
-    current: [0, 0],
+    previous: nexWorld.location,
+    current: nexWorld.location,
   });
   const [context, setContext] = useState();
   const [zoomState, setZoomState] = useState();
@@ -90,10 +90,11 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     });
 
     // Set initial starting coordinate view [0, 0]
+    console.log(location.current);
     zoomRef.current.translateTo(
       select(canvasRef.current),
-      location.current[0],
-      location.current[1]
+      location.current[0] * nexWorld.unitWidth,
+      location.current[1] * nexWorld.unitHeight
     );
     // Set initial zoom scale
     zoomRef.current.scaleTo(select(canvasRef.current), 2);

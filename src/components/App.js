@@ -11,11 +11,16 @@ function App() {
   return (
     <div className="App">
       <div>HeLLLLLLLLLLLLLLLLLLLLLLo</div>
-      {/*
+
       <CoordinateDisplay coords={coords} />
-      <WorldMapCanvas nexWorld={nexWorld} setCoords={setCoords} />
-  */}
-      {<NexDialog nexWorld={nexWorld} />}
+      <WorldMapCanvas
+        nexWorld={nexWorld}
+        setCoords={setCoords}
+        width={window.innerWidth}
+        height={window.innerHeight}
+      />
+
+      {/*<NexDialog nexWorld={nexWorld} />*/}
     </div>
   );
 }

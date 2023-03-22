@@ -73,6 +73,10 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
+    road: {
+      type: "GeometryCollection",
+      geometries: [],
+    },
     nnnbb: {
       type: "GeometryCollection",
       geometries: [],
@@ -156,6 +160,7 @@ export const reverseCoords = (arr) => {
     e[1] = e[1] * -1;
     res.unshift(e);
   });
+  console.log(JSON.stringify(res));
   return res;
 };
 
@@ -182,5 +187,6 @@ export const stringToArc = (txt) => {
       arc = [...arcTable[char]];
     }
   });
+  console.log(JSON.stringify(arcArray));
   return arcArray;
 };

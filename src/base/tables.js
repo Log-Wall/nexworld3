@@ -18,14 +18,14 @@ export const longDirConversion = {
 };
 
 export const toggleDirs = {
-  nne: ["n", "ne"],
+  nne: ["ne", "n"],
+  nnw: ["nw", "n"],
   ene: ["e", "ne"],
-  ese: ["e", "se"],
-  sse: ["s", "se"],
+  ese: ["se", "e"],
+  sse: ["se", "s"],
   ssw: ["s", "sw"],
-  wsw: ["w", "sw"],
+  wsw: ["sw", "s"],
   wnw: ["w", "nw"],
-  nnw: ["n", "nw"],
 };
 
 export const topographies = {
@@ -37,6 +37,7 @@ export const topographies = {
   lowmt: "rgba( 130, 100,  70, 0.65)",
   chops: "rgba(   5,  20,  75, 0.65)",
   roughs: "rgba( 165, 185, 195, 0.15)",
+  road: "grey",
 
   nnnbb: "rgba(  85,  55,   1, 0.65)",
   nnnbr: "rgba( 165, 135, 100, 0.75)",
