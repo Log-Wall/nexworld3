@@ -16,6 +16,7 @@ import NexWorld from "./NexWorld";
 import CoordinateDisplays from "./CoordinateDisplays";
 import CoordinateDisplay from "./CoordinateDisplay";
 import ShipCoordinates from "./ShipCoordinates";
+import HarbourSelect from "./HarbourSelect";
 
 let darkTheme = createTheme({
   palette: {
@@ -162,6 +163,7 @@ const NexDialog = ({ nexWorld }) => {
               />
             </DialogContent>
             <DialogActions>
+              <HarbourSelect />
               <Button
                 autoFocus
                 onClick={() => {
