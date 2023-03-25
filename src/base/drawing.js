@@ -64,16 +64,16 @@ const scaling = (k) => {
       scale = 50; //100;
       break;
     case k < 0.15:
-      scale = 50;
-      break;
-    case k < 0.35:
       scale = 25;
       break;
-    case k < 0.8:
+    case k < 0.35:
       scale = 10;
       break;
-    case k < 1.4:
+    case k < 0.8:
       scale = 5;
+      break;
+    case k < 1:
+      scale = 1;
       break;
     default:
       scale = 1;

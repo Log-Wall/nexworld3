@@ -87,6 +87,80 @@ const moveShip = (dir) => {
   );
 };
 
+const waveCall = ({ dir, num }) => {
+  let newCoords = [0, 0];
+  let direction = dir;
+  /* // TODO Not sure how wavecall works with odd dirs
+  if (Object.keys(toggleDirs).includes(direction)) {
+    direction = toggleDirs[dir][nexWorld.directionToggle];
+    nexWorld.directionToggle = nexWorld.directionToggle ? 0 : 1;
+  }
+  */
+
+  switch (direction) {
+    case "n":
+      newCoords = [0, -1];
+      break;
+    case "nne":
+      newCoords = [0, -1];
+      break;
+    case "ne":
+      newCoords = [1, -1];
+      break;
+    case "ene":
+      newCoords = [0, -1];
+      break;
+    case "e":
+      newCoords = [1, 0];
+      break;
+    case "ese":
+      newCoords = [0, -1];
+      break;
+    case "se":
+      newCoords = [1, 1];
+      break;
+    case "sse":
+      newCoords = [0, -1];
+      break;
+    case "s":
+      newCoords = [0, 1];
+      break;
+    case "ssw":
+      newCoords = [0, -1];
+      break;
+    case "sw":
+      newCoords = [-1, 1];
+      break;
+    case "wsw":
+      newCoords = [0, -1];
+      break;
+    case "w":
+      newCoords = [-1, 0];
+      break;
+    case "wnw":
+      newCoords = [0, -1];
+      break;
+    case "nw":
+      newCoords = [-1, -1];
+      break;
+    case "nnw":
+      newCoords = [0, -1];
+      break;
+    default:
+      newCoords = [0, 0];
+  }
+
+  nexWorld.location[0] += newCoords[0] * num;
+  nexWorld.location[1] += newCoords[1] * num;
+  nexWorld.move = [...newCoords];
+
+  nexWorld.evt.dispatchEvent(
+    new CustomEvent("nexWorld-location-update", {
+      detail: [...nexWorld.location],
+    })
+  );
+};
+
 const center = () => {
   nexWorld.follow = true;
 
@@ -197,6 +271,7 @@ export const nexWorld = {
   selection: {},
   zoomRef: {},
 
+  alias: alias,
   moveShip: moveShip,
   turnShip: turnShip,
   startup: startup,

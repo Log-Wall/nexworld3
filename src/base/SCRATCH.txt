@@ -59,6 +59,8 @@ road: txt: +, bg black, fg grey
 desert: txt: ', bg tan, fg black
 desert: bg tan
 
+// wave call
+A wave rises before the ship, rapidly increasing in size to an immense swell of water that slams into the ship, catapulting it to the northwest.
 
 // Your ship on this line
 '\x1B[48;5;004m          \x1B[38;5;006mwwwwww\x1B[38;5;010;48;5;002mjj\x1B[0;38;5;015;48;5;000m=\x1B[38;5;007m\x1B[38;5;011;48;5;006m;\x1B[38;5;006;48;5;004mwwwwwww\x1B[38;5;011;48;5;006m;\x1B[38;5;006;48;5;004mww\x1B[38;5;011;48;5;006m;\x1B[38;5;006;48;5;004mwwww\x1B[38;5;007m  \x1B[0;38;5;007;48;5;000m'
