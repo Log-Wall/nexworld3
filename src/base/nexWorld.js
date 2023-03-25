@@ -278,6 +278,7 @@ export const nexWorld = {
   center: center,
   open: open,
   goto: goto,
+  alias: alias,
 
   unitHeight: unitHeight,
   unitWidth: unitWidth,

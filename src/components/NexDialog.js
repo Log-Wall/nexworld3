@@ -163,7 +163,7 @@ const NexDialog = ({ nexWorld }) => {
               />
             </DialogContent>
             <DialogActions>
-              <HarbourSelect />
+              <HarbourSelect nexWorld={nexWorld} />
               <Button
                 autoFocus
                 onClick={() => {
