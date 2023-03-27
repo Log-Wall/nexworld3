@@ -246,7 +246,7 @@ const features = [
   },
   {
     id: "Shala-Khulia",
-    objt: "marsh",
+    objt: "beach",
     arcs: [
       [
         [0.5, -0.5],
@@ -310,7 +310,7 @@ const features = [
   },
   {
     id: "Shala-Khulia",
-    objt: "grass",
+    objt: "jungle",
     arcs: [
       [
         [-0.5, -0.5],
@@ -494,7 +494,7 @@ const features = [
   },
   {
     id: "Shala-Khulia",
-    objt: "..blk",
+    objt: "grass",
     arcs: [
       [
         [12.5, -25.5],
@@ -680,7 +680,7 @@ const features = [
   },
   {
     id: "Left of Shala-Khulia",
-    objt: "marsh",
+    objt: "beach",
     arcs: [
       [
         [-26.5, -18.5],

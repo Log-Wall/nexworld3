@@ -25,6 +25,7 @@ import "./topographies/islands/ilyrean";
 import "./topographies/islands/suliel";
 import "./topographies/islands/minos";
 import "./topographies/islands/mysia";
+import "./topographies/islands/tapoa";
 import "./topographies/islands/tearsOfSarapis";
 import "./topographies/islands/tuar";
 import "./topographies/islands/ulangi";
@@ -34,6 +35,7 @@ import "./topographies/chops/chopsWest";
 import "./topographies/chops/chopsNorth";
 import "./topographies/chops/chopsTasurke";
 import "./topographies/chops/chopsTenwat";
+import "./topographies/chops/chopsTapoa";
 
 import "./topographies/roughs/roughsWest";
 import "./topographies/roughs/roughsPhereklos";
@@ -96,6 +98,9 @@ export const drawMap = ({ context, path, transform, width, height }) => {
     });
   }
 
+  traceFeature({ context: context, path: path });
+  tracePoint({ context: context });
+
   drawGrid({ context: context, transform: transform });
 
   for (const id in harbours) {
@@ -121,9 +126,9 @@ export const drawMap = ({ context, path, transform, width, height }) => {
     coords: nexWorld.location,
   });
 
-  const ss = new Image();
-  ss.src = monster;
-  context.drawImage(ss, 2 * 10 - 5, 4 * 10 - 5, 10, 10);
+  //const ss = new Image();
+  //ss.src = monster;
+  //context.drawImage(ss, 2 * 10 - 5, 4 * 10 - 5, 10, 10);
 
   context.restore();
 };
@@ -287,6 +292,7 @@ const drawShip = ({ context, transform, coords }) => {
 };
 const drawFeatures = ({ context, path, type, rgba }) => {
   const feature = topojson.feature(topoj, topoj.objects[type]);
+  nexWorld.geoj[type] = feature;
   context.fillStyle = rgba;
   //context.strokeStyle = "rgba(0, 0, 0, 1)";
   context.lineWidth = 0;
@@ -297,6 +303,7 @@ const drawFeatures = ({ context, path, type, rgba }) => {
   //context.stroke(); // Do we want outlines? Maybe for reefs?
   context.closePath();
 };
+
 const drawImage = ({ context, path, type, rgba }) => {
   context.closePath();
   context.beginPath();
@@ -331,4 +338,45 @@ const drawLabel = ({ context, transform, coords, text }) => {
   context.fillStyle = "silver";
   context.font = `bold ${12 * (scale / 2)}px RobotoMono Consolas monospace`;
   context.fillText(text, coords[0] - 2.5, coords[1] - 6.25);
+};
+
+const traceFeature = ({ context, path }) => {
+  const feature = topojson.feature(
+    nexWorld.traceTopo,
+    nexWorld.traceTopo.objects.trace
+  );
+  context.fillStyle = "red";
+  context.strokeStyle = "rgba(0, 0, 0, 1)";
+  context.lineWidth = 0;
+  context.closePath();
+  context.beginPath();
+  path(feature);
+  context.fill();
+  context.stroke(); // Do we want outlines? Maybe for reefs?
+  context.closePath();
+};
+const tracePoint = ({ context }) => {
+  // TODO How should we color the port points? All the same or by another metric?
+  const startCoords = nexWorld.traceTopo.arcs[0][0].map((val) => val * 10);
+  const endCoords = nexWorld.traceTopo.arcs[0]
+    .reduce((acc, curr) => [acc[0] + curr[0], acc[1] + curr[1]], [0, 0])
+    .map((val) => val * 10);
+  if (startCoords[0] === endCoords[0] && startCoords[1] === endCoords[1]) {
+    console.log(JSON.stringify(nexWorld.traceTopo.arcs[0]));
+  }
+  context.closePath();
+  context.beginPath();
+  context.fillStyle = "black";
+  context.moveTo(startCoords[0], startCoords[1]);
+  context.arc(startCoords[0], startCoords[1], 2.5, 0, 2 * Math.PI);
+  context.fill();
+  context.closePath();
+  context.beginPath();
+  context.fillStyle = "yellow";
+  context.moveTo(endCoords[0], endCoords[1]);
+  context.arc(endCoords[0], endCoords[1], 2.5, 0, 2 * Math.PI);
+
+  context.fill();
+
+  context.closePath();
 };

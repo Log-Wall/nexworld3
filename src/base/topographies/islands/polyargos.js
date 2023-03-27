@@ -223,7 +223,7 @@ const features = [
   },
   {
     id: "Polyargos",
-    objt: "mount",
+    objt: "mountains",
     arcs: [
       [
         [-35.5, -63.5],
@@ -272,7 +272,7 @@ const features = [
   },
   {
     id: "Polyargos",
-    objt: "marsh",
+    objt: "beach",
     arcs: [
       [
         [-32.5, -57.5],

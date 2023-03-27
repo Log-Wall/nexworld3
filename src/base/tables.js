@@ -28,11 +28,32 @@ export const toggleDirs = {
   wnw: ["w", "nw"],
 };
 
+export const directionCoords = {
+  n: [0, -1],
+  nne: [0, -1],
+  ne: [1, -1],
+  ene: [0, -1],
+  e: [1, 0],
+  ese: [0, -1],
+  se: [1, 1],
+  sse: [0, -1],
+  s: [0, 1],
+  ssw: [0, -1],
+  sw: [-1, 1],
+  wsw: [0, -1],
+  w: [-1, 0],
+  wnw: [0, -1],
+  nw: [-1, -1],
+  nnw: [0, -1],
+};
+
 export const topographies = {
   reefs: "rgba( 100, 130, 180, 0.55)",
-  marsh: "rgba(  55, 140, 135, 0.88)",
+  beach: "rgba(  55, 140, 135, 0.88)",
+  desert: "rgba(210,180,140, 0.88)",
   grass: "rgba(  65, 150,  65, 0.85)",
-  mount: "rgba( 100,  70,  35, 0.85)",
+  jungle: "rgba(  0, 255,  0, 0.85)",
+  mountains: "rgba( 100,  70,  35, 0.85)",
   swamp: "rgba(  10,  60,  30, 0.85)",
   lowmt: "rgba( 130, 100,  70, 0.65)",
   chops: "rgba(   5,  20,  75, 0.65)",

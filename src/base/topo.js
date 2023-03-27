@@ -1,3 +1,5 @@
+import { topographies } from "./tables";
+
 export const topoj = {
   type: "Topology",
   transform: { scale: [10, 10], translate: [0, 0] }, // This will be overwritten later
@@ -18,7 +20,7 @@ export const topoj = {
     ], // Sea Lion Cove
   ],
   objects: {
-    ships: {
+    world: {
       type: "GeometryCollection",
       geometries: [],
     },
@@ -43,7 +45,19 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
-    marsh: {
+    beach: {
+      type: "GeometryCollection",
+      geometries: [
+        // {type: 'Polygon',arcs:[[5,6,7]],id:'MP-SK'}, /* DON'T DELETE, Sample
+      ],
+    },
+    desert: {
+      type: "GeometryCollection",
+      geometries: [
+        // {type: 'Polygon',arcs:[[5,6,7]],id:'MP-SK'}, /* DON'T DELETE, Sample
+      ],
+    },
+    jungle: {
       type: "GeometryCollection",
       geometries: [
         // {type: 'Polygon',arcs:[[5,6,7]],id:'MP-SK'}, /* DON'T DELETE, Sample
@@ -53,7 +67,7 @@ export const topoj = {
       type: "GeometryCollection",
       geometries: [],
     },
-    mount: {
+    mountains: {
       type: "GeometryCollection",
       geometries: [],
     },
@@ -108,6 +122,7 @@ export const topoj = {
     "##bwn": {
       type: "GeometryCollection",
       geometries: [],
+      properties: { color: "green" },
     },
     "..blk": {
       type: "GeometryCollection",
@@ -127,6 +142,21 @@ export const topoj = {
     },
   },
 };
+
+/* 
+export const insert = (data, type) => {
+  for (let i = 0; i < data.arcs.length; i++) {
+    const arc = data.arcs[i];
+    const entry = {
+      type: type || "Polygon",
+      id: data.id,
+      properties: { color: topographies[data.objt] || "red", type: data.objt },
+      arcs: [[topoj.arcs.length]],
+    };
+    topoj.objects.world.geometries.push(entry);
+    topoj.arcs.push(arc);
+  }
+};*/
 
 export const insert = (data, type) => {
   for (let i = 0; i < data.arcs.length; i++) {
@@ -164,27 +194,53 @@ export const reverseCoords = (arr) => {
   return res;
 };
 
-const arcTable = {
+const WASDTable = {
   w: [0, -1],
   a: [-1, 0],
   s: [0, 1],
   d: [1, 0],
 };
-export const stringToArc = (txt) => {
+const NESWTable = {
+  n: [0, -1],
+  w: [-1, 0],
+  s: [0, 1],
+  e: [1, 0],
+};
+export const WASDToArc = (txt) => {
   const stringArray = txt.split("");
   const arcArray = [];
   let arc = [];
   let currentChar = false;
   stringArray.forEach((char) => {
     if (currentChar === char) {
-      arc[0] += arcTable[char][0];
-      arc[1] += arcTable[char][1];
+      arc[0] += WASDTable[char][0];
+      arc[1] += WASDTable[char][1];
     } else {
       if (arc.length > 0) {
         arcArray.push([...arc]);
       }
       currentChar = char;
-      arc = [...arcTable[char]];
+      arc = [...WASDTable[char]];
+    }
+  });
+  console.log(JSON.stringify(arcArray));
+  return arcArray;
+};
+export const NESWToArc = (txt) => {
+  const stringArray = txt.split("");
+  const arcArray = [];
+  let arc = [];
+  let currentChar = false;
+  stringArray.forEach((char) => {
+    if (currentChar === char) {
+      arc[0] += NESWTable[char][0];
+      arc[1] += NESWTable[char][1];
+    } else {
+      if (arc.length > 0) {
+        arcArray.push([...arc]);
+      }
+      currentChar = char;
+      arc = [...NESWTable[char]];
     }
   });
   console.log(JSON.stringify(arcArray));

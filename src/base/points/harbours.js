@@ -129,6 +129,11 @@ export const harbours = {
       incense: [{ cost: "kawhe", lose: 3, receive: 2 }],
     },
   },
+  Tapoa: {
+    color: `rgba(145, 60, 55, 1)`,
+    coordinates: [-164, -41],
+    type: "harbour",
+  },
   Targossas: {
     color: `rgba(145, 60, 55, 1)`,
     coordinates: [376, 234],

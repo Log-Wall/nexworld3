@@ -1,7 +1,13 @@
-import { checkClosed, reverseCoords, stringToArc, topoj } from "./topo";
+import {
+  checkClosed,
+  reverseCoords,
+  WASDToArc,
+  NESWToArc,
+  topoj,
+} from "./topo";
 
 import NexDialog from "../components/NexDialog";
-import { toggleDirs, longDirConversion } from "./tables";
+import { toggleDirs, longDirConversion, directionCoords } from "./tables";
 import { drawMap, unitHeight, unitWidth } from "./drawing";
 
 const turnShip = (direction) => {
@@ -22,58 +28,7 @@ const moveShip = (dir) => {
     nexWorld.directionToggle = nexWorld.directionToggle ? 0 : 1;
   }
 
-  switch (direction) {
-    case "n":
-      newCoords = [0, -1];
-      break;
-    case "nne":
-      newCoords = [0, -1];
-      break;
-    case "ne":
-      newCoords = [1, -1];
-      break;
-    case "ene":
-      newCoords = [0, -1];
-      break;
-    case "e":
-      newCoords = [1, 0];
-      break;
-    case "ese":
-      newCoords = [0, -1];
-      break;
-    case "se":
-      newCoords = [1, 1];
-      break;
-    case "sse":
-      newCoords = [0, -1];
-      break;
-    case "s":
-      newCoords = [0, 1];
-      break;
-    case "ssw":
-      newCoords = [0, -1];
-      break;
-    case "sw":
-      newCoords = [-1, 1];
-      break;
-    case "wsw":
-      newCoords = [0, -1];
-      break;
-    case "w":
-      newCoords = [-1, 0];
-      break;
-    case "wnw":
-      newCoords = [0, -1];
-      break;
-    case "nw":
-      newCoords = [-1, -1];
-      break;
-    case "nnw":
-      newCoords = [0, -1];
-      break;
-    default:
-      newCoords = [0, 0];
-  }
+  newCoords = directionCoords[direction];
 
   nexWorld.direction = dir;
   nexWorld.location[0] += newCoords[0];
@@ -87,7 +42,7 @@ const moveShip = (dir) => {
   );
 };
 
-const waveCall = ({ dir, num }) => {
+const waveCall = (dir, num) => {
   let newCoords = [0, 0];
   let direction = dir;
   /* // TODO Not sure how wavecall works with odd dirs
@@ -97,63 +52,13 @@ const waveCall = ({ dir, num }) => {
   }
   */
 
-  switch (direction) {
-    case "n":
-      newCoords = [0, -1];
-      break;
-    case "nne":
-      newCoords = [0, -1];
-      break;
-    case "ne":
-      newCoords = [1, -1];
-      break;
-    case "ene":
-      newCoords = [0, -1];
-      break;
-    case "e":
-      newCoords = [1, 0];
-      break;
-    case "ese":
-      newCoords = [0, -1];
-      break;
-    case "se":
-      newCoords = [1, 1];
-      break;
-    case "sse":
-      newCoords = [0, -1];
-      break;
-    case "s":
-      newCoords = [0, 1];
-      break;
-    case "ssw":
-      newCoords = [0, -1];
-      break;
-    case "sw":
-      newCoords = [-1, 1];
-      break;
-    case "wsw":
-      newCoords = [0, -1];
-      break;
-    case "w":
-      newCoords = [-1, 0];
-      break;
-    case "wnw":
-      newCoords = [0, -1];
-      break;
-    case "nw":
-      newCoords = [-1, -1];
-      break;
-    case "nnw":
-      newCoords = [0, -1];
-      break;
-    default:
-      newCoords = [0, 0];
-  }
+  newCoords = directionCoords[direction];
 
   nexWorld.location[0] += newCoords[0] * num;
   nexWorld.location[1] += newCoords[1] * num;
   nexWorld.move = [...newCoords];
 
+  console.log(nexWorld.location);
   nexWorld.evt.dispatchEvent(
     new CustomEvent("nexWorld-location-update", {
       detail: [...nexWorld.location],
@@ -262,6 +167,45 @@ const startup = () => {
   };
 };
 
+const traceTopo = {
+  type: "Topology",
+  transform: { scale: [10, 10], translate: [0, 0] }, // This will be overwritten later
+  arcs: [[[0, 0]]],
+  objects: {
+    trace: {
+      type: "GeometryCollection",
+      geometries: [{ type: "Polygon", id: "Trace", arcs: [[0]] }],
+    },
+  },
+};
+const traceInsert = (dir) => {
+  const newCoords = directionCoords[dir];
+  if (nexWorld.traceLastDir === dir) {
+    let lastArc = [...traceTopo.arcs[0].at(-1)];
+    lastArc[0] += newCoords[0];
+    lastArc[1] += newCoords[1];
+    traceTopo.arcs[0][traceTopo.arcs[0].length - 1] = [...lastArc];
+    console.log(traceTopo.arcs[0].length + lastArc[0] + lastArc[1]);
+    nexWorld.setTraceCount(traceTopo.arcs[0].length + lastArc[0] + lastArc[1]);
+  } else {
+    traceTopo.arcs[0].push([...newCoords]);
+    nexWorld.setTraceCount(traceTopo.arcs[0].length);
+  }
+  nexWorld.traceLastDir = dir;
+};
+const traceUndo = () => {
+  traceTopo.arcs[0].pop();
+  nexWorld.setTraceCount(traceTopo.arcs[0].length);
+};
+const traceStart = (coords) => {
+  traceTopo.arcs[0][0] = [...coords];
+  nexWorld.traceLastDir = false;
+};
+const traceReset = () => {
+  traceTopo.arcs = [[[0, 0]]];
+  nexWorld.traceLastDir = false;
+};
+
 export const nexWorld = {
   evt: new EventTarget(),
   component: NexDialog,
@@ -271,9 +215,9 @@ export const nexWorld = {
   selection: {},
   zoomRef: {},
 
-  alias: alias,
   moveShip: moveShip,
   turnShip: turnShip,
+  waveCall: waveCall,
   startup: startup,
   center: center,
   open: open,
@@ -291,9 +235,19 @@ export const nexWorld = {
 
   //DEBUG
   topoj: topoj,
-  stringToArc: stringToArc,
+  geoj: {},
+  WASDToArc: WASDToArc,
+  NESWToArc: NESWToArc,
   reverseCoords: reverseCoords,
   checkClosed: checkClosed,
+
+  //Tracing
+  traceTopo: traceTopo,
+  traceInsert: traceInsert,
+  traceStart: traceStart,
+  traceReset: traceReset,
+  traceUndo: traceUndo,
+  traceLastDir: false,
 };
 
 window.nexWorld = nexWorld;

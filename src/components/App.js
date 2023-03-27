@@ -20,7 +20,7 @@ function App() {
         height={window.innerHeight}
       />
 
-      {<NexDialog nexWorld={nexWorld} />}
+      {/*<NexDialog nexWorld={nexWorld} />*/}
     </div>
   );
 }

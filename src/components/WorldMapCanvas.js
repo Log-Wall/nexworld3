@@ -14,10 +14,43 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
   const [zoomState, setZoomState] = useState();
   const [firstRender, setFirstRender] = useState(true);
   const [direction, setDirection] = useState("n");
+  const [traceCount, setTraceCount] = useState(0);
 
   const canvasRef = useRef();
   const zoomRef = useRef();
   const pathRef = useRef();
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      const key = event.key.toUpperCase();
+      switch (key) {
+        case "W":
+          nexWorld.traceInsert("n");
+          break;
+        case "A":
+          nexWorld.traceInsert("w");
+          break;
+        case "S":
+          nexWorld.traceInsert("s");
+          break;
+        case "D":
+          nexWorld.traceInsert("e");
+          break;
+        default:
+          break;
+      }
+      if (event.keyCode === 8) {
+        // Backspace pressed
+        nexWorld.traceUndo();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    nexWorld.setTraceCount = setTraceCount;
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     nexWorld.evt.addEventListener("nexWorld-location-update", ({ detail }) => {
@@ -146,7 +179,7 @@ const WorldMapCanvas = ({ nexWorld, setCoords, width, height }) => {
     } else {
       nexWorld.center();
     }
-  }, [location, direction]);
+  }, [location, direction, traceCount]);
 
   useEffect(() => {
     window.ctx = context;
