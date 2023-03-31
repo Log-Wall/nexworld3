@@ -98,8 +98,10 @@ export const drawMap = ({ context, path, transform, width, height }) => {
     });
   }
 
-  traceFeature({ context: context, path: path });
-  tracePoint({ context: context });
+  if (typeof nexusclient === 'undefined') {
+    traceFeature({ context: context, path: path });
+    tracePoint({ context: context });
+  }
 
   drawGrid({ context: context, transform: transform });
 
