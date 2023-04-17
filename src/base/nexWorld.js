@@ -24,7 +24,7 @@ const moveShip = (dir) => {
   let newCoords = [0, 0];
   let direction = dir;
   if (Object.keys(toggleDirs).includes(direction)) {
-    direction = toggleDirs[dir][nexWorld.directionToggle];
+    direction = nexWorld.toggleDirs[dir][nexWorld.directionToggle];
     nexWorld.directionToggle = nexWorld.directionToggle ? 0 : 1;
   }
 
@@ -231,6 +231,7 @@ export const nexWorld = {
   direction: "se",
   follow: true,
   directionToggle: 0,
+  toggleDirs: toggleDirs,
   longDirs: longDirConversion,
 
   //DEBUG

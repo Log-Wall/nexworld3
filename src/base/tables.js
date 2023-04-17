@@ -20,12 +20,12 @@ export const longDirConversion = {
 export const toggleDirs = {
   nne: ["ne", "n"],
   nnw: ["nw", "n"],
-  ene: ["e", "ne"],
-  ese: ["se", "e"],
-  sse: ["se", "s"],
-  ssw: ["s", "sw"],
+  ene: ["ne", "e"], // Ashtan "The Sapphire Sea"
+  ese: ["e", "se"], // Ashtan "The Sapphire Sea"
+  sse: ["s", "se"],
+  ssw: ["sw", "s"],
   wsw: ["sw", "s"],
-  wnw: ["w", "nw"],
+  wnw: ["nw", "w"],
 };
 
 export const directionCoords = {
