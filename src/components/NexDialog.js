@@ -1,4 +1,3 @@
-
 import "react-resizable/css/styles.css";
 import {
   DialogContent,
@@ -17,6 +16,7 @@ import CoordinateDisplays from "./CoordinateDisplays";
 import CoordinateDisplay from "./CoordinateDisplay";
 import ShipCoordinates from "./ShipCoordinates";
 import HarbourSelect from "./HarbourSelect";
+import NudgeButtons from "./NudgeButtons";
 
 let darkTheme = createTheme({
   palette: {
@@ -92,7 +92,7 @@ function PaperComponent(props) {
 }
 
 const NexDialog = ({ nexWorld }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(500);
   const [width, setWidth] = useState(500);
   const [coords, setCoords] = useState([0, 0]);
@@ -163,16 +163,19 @@ const NexDialog = ({ nexWorld }) => {
               />
             </DialogContent>
             <DialogActions>
-              <HarbourSelect nexWorld={nexWorld} />
-              <Button
-                autoFocus
-                onClick={() => {
-                  nexWorld.center(nexWorld.location);
-                }}
-              >
-                Recenter
-              </Button>
-              <Button onClick={handleClickClose}>close</Button>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <NudgeButtons />
+                <HarbourSelect nexWorld={nexWorld} />
+                <Button
+                  autoFocus
+                  onClick={() => {
+                    nexWorld.center(nexWorld.location);
+                  }}
+                >
+                  Recenter
+                </Button>
+                <Button onClick={handleClickClose}>close</Button>
+              </div>
             </DialogActions>
           </>
         </Resizable>
