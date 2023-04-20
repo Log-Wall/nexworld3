@@ -24,7 +24,7 @@ export const toggleDirs = {
   ese: ["e", "se"], // Ashtan "The Sapphire Sea"
   sse: ["s", "se"],
   ssw: ["sw", "s"],
-  wsw: ["sw", "s"],
+  wsw: ["sw", "w"],
   wnw: ["nw", "w"],
 };
 
