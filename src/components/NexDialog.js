@@ -109,6 +109,8 @@ const NexDialog = ({ nexWorld }) => {
 
   const handleClickClose = () => {
     setOpen(false);
+    //globalThis.nexusclient.platform().inputRef.current.focus();
+    globalThis.nexusclient.platform().inputRef.current.select();
   };
 
   return (
