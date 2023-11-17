@@ -241,6 +241,9 @@ export const nexWorld = {
   NESWToArc: NESWToArc,
   reverseCoords: reverseCoords,
   checkClosed: checkClosed,
+  tester() {
+    console.log("nexWorld.tester()");
+  },
 
   //Tracing
   traceTopo: traceTopo,
