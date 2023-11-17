@@ -109,7 +109,10 @@ const NexDialog = ({ nexWorld }) => {
 
   const handleClickClose = () => {
     setOpen(false);
-    nexWorld.tester();
+    setTimeout(() => {
+      globalThis.nexusclient.platform().inputRef.current.focus();
+      globalThis.nexusclient.platform().inputRef.current.select();
+    }, 250);
   };
 
   return (
