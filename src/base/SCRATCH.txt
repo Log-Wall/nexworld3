@@ -71,3 +71,22 @@ A wave rises before the ship, rapidly increasing in size to an immense swell of 
 
 Sea monster nest at Ashtan
 Kazuya tells you, "The upper left corner is around -65, 380. The lower right corner is around -35, 360."
+
+function translateWilderness(num)
+  local info = gmcp.Room.Info
+  local num = num or info.num
+  local posx,posy,chunkx,chunky,x,y
+  if info.ohmap then
+    --wilderness rooms always have 6 digits for x and y, but can have
+    --1, 2, or theoretically 3 digits for their chunk number
+    chunk,x,y = string.match(num, "(.?.?.)(...)(...)")
+    --4 chunks per row, so let's change the chunk number into a chunk position instead
+    chunkx = chunk%4
+    chunky = math.ceil(chunk/4)
+    --set an actual x/y grid position based on our chunk and our current x/y
+    posx = (chunkx-1)*250 + x 
+    posy = ((chunky-1)*250 + y)*-1 --invert our y so grid math works right,
+                                   --because Achaea y pos is top to bottom
+  end
+  return posx, posy, chunkx, chunky, x*1, y*1
+end
