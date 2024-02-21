@@ -121,8 +121,6 @@ const startup = () => {
     return;
   }
 
-  nexSys.checkForUpdate();
-
   if (!document.getElementById("modal-root")) {
     document
       .getElementsByTagName("body")[0]
