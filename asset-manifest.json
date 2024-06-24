@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/nexworld3/static/css/main.eb00120f.css",
-    "main.js": "/nexworld3/static/js/main.6c3757fc.js",
+    "main.js": "/nexworld3/static/js/main.164babe4.js",
     "static/js/787.12c1979d.chunk.js": "/nexworld3/static/js/787.12c1979d.chunk.js",
     "static/media/sea-serpent.svg": "/nexworld3/static/media/sea-serpent.f51775a8468f478ccd66058e373768a0.svg",
     "index.html": "/nexworld3/index.html",
     "main.eb00120f.css.map": "/nexworld3/static/css/main.eb00120f.css.map",
-    "main.6c3757fc.js.map": "/nexworld3/static/js/main.6c3757fc.js.map",
+    "main.164babe4.js.map": "/nexworld3/static/js/main.164babe4.js.map",
     "787.12c1979d.chunk.js.map": "/nexworld3/static/js/787.12c1979d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.eb00120f.css",
-    "static/js/main.6c3757fc.js"
+    "static/js/main.164babe4.js"
   ]
 }
