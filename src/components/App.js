@@ -5,12 +5,13 @@ import NexWorld from "./NexWorld";
 import CoordinateDisplay from "./CoordinateDisplay";
 import DraggableDialog from "./Resize";
 import WorldMapCanvas from "./WorldMapCanvas";
+import TopologyMap from "./TopologyMap";
 
 function App() {
   const [coords, setCoords] = useState([0, 0]);
   return (
     <div className="App">
-      <div>HeLLLLLLLLLLLLLLLLLLLLLLo</div>
+      <div>QuadTree</div>
 
       <CoordinateDisplay coords={coords} />
       <WorldMapCanvas
@@ -21,6 +22,7 @@ function App() {
       />
 
       <NexDialog nexWorld={nexWorld} />
+      <TopologyMap />
     </div>
   );
 }
