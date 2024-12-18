@@ -10,7 +10,7 @@ function App() {
   const [coords, setCoords] = useState([0, 0]);
   return (
     <div className="App">
-      <div>HeLLLLLLLLLLLLLLLLLLLLLLo</div>
+      <div>nexWorld3</div>
 
       <CoordinateDisplay coords={coords} />
       <WorldMapCanvas
